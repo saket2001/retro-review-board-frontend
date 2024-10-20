@@ -6,10 +6,12 @@ import { Heading } from "../../Heading/Heading";
 import BoardItemInput from "../BoardItem/BoardItemInput";
 
 interface BoardListProps {
+  boardId: string,
   listHeading: string;
   extraStyles: string;
   dataList: IBoardItem[];
   loggedInUserId: string;
+  maskUserComments: boolean;
 }
 
 const BoardList: FunctionComponent<BoardListProps> = (props) => {
@@ -21,9 +23,16 @@ const BoardList: FunctionComponent<BoardListProps> = (props) => {
 
       <div className="flex flex-col gap-y-3 p-2">
         {hasBoardItems &&
-          props?.dataList.map((item: IBoardItem) => <BoardItem key={item.Id} data={item} loggedInUserId={props.loggedInUserId} />)}
+          props?.dataList.map((item: IBoardItem) =>
+            <BoardItem key={item.Id}
+              BoardId={props?.boardId}
+              data={item}
+              maskUserComments={props.maskUserComments}
+              boardItemCategory={props?.listHeading}
+              loggedInUserId={props.loggedInUserId} />
+          )}
 
-        <BoardItemInput boardItemCategory={props?.listHeading} IsItemNew={true} boardItemData={null} />
+        <BoardItemInput handleEditCommentFn={null} boardId={props.boardId} boardItemCategory={props?.listHeading} IsItemNew={true} boardItemData={null} />
       </div>
     </section>
   );

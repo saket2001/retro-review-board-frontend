@@ -51,15 +51,15 @@ const WelcomeAuth = () => {
   return (
     <section className="w-full h-full flex items-center justify-center">
 
-      <div className="my-2 lg:my-8 w-3/4 lg:w-1/2 shadow-md flex flex-col items-center px-3 py-2 gap-y-2 lg:p-4 rounded-lg bg-gray-100">
+      <div className="my-2 lg:my-8 w-3/4 lg:w-1/2 shadow-md flex flex-col items-center px-3 py-2 gap-y-2 lg:p-4 rounded-lg bg-white">
         <Heading variant="h1" title="Welcome to the Retro Review Board!" />
         <p className="text-gray-600 text-center">
           Share your insights, reflect on past experiences, and collaborate with your team to make every project better.
         </p>
         {/* form */}
-        <form className="flex flex-col items-center px-3 py-2 bg-gray-100 shadow-none">
-          <Tabs defaultValue="guest" className="w-[500px] bg-gray-100 shadow-none">
-            <TabsList className="grid w-full grid-cols-3 bg-gray-200 text-gray-800">
+        <form className="flex flex-col items-center px-3 py-3">
+          <Tabs defaultValue="guest" className="w-[500px]">
+            <TabsList className="grid w-full grid-cols-3 text-gray-800 bg-gray-100 py-1.5">
               <TabsTrigger value="guest">Guest Mode</TabsTrigger>
               <TabsTrigger value="user">Log In</TabsTrigger>
               <TabsTrigger value="new-user">Sign Up</TabsTrigger>
@@ -76,7 +76,7 @@ const WelcomeAuth = () => {
                 <CardContent className="space-y-2">
                   <div className="space-y-1">
                     <Label htmlFor="fullname">Full Name</Label>
-                    <Input onChange={(e) => setGuestName(e.target.value)} id="fullname" />
+                    <Input className="border border-gray-500" onChange={(e) => setGuestName(e.target.value)} id="fullname" />
                   </div>
                 </CardContent>
                 <CardFooter>
@@ -88,7 +88,7 @@ const WelcomeAuth = () => {
               {/* <LoginForm/> */}
               <Card className="bg-gray-100">
                 <CardContent className="space-y-2 px-2 py-4">
-                  <Heading variant="h2"
+                  <Heading variant="h3"
                     title="Login will be available soon"
                     extraStyles="font-semibold text-base"
                   />
@@ -99,7 +99,7 @@ const WelcomeAuth = () => {
               {/* <SignUpForm/> */}
               <Card className="bg-gray-100">
                 <CardContent className="space-y-2 px-2 py-4">
-                  <Heading variant="h2"
+                  <Heading variant="h3"
                     title="Sign up will be available soon"
                     extraStyles="font-semibold text-base"
                   />

@@ -1,7 +1,7 @@
 export default interface IBoardItem {
-  Id: string | number;
+  Id: string;
   comment: string;
-  commenterId: string | number;
+  commenterId: string;
   commerterName: string;
   category: string;
   likes: string;
