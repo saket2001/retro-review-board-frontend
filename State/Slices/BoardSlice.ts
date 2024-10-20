@@ -1,53 +1,77 @@
-import IBoardData from "@/Interfaces/IBoardData";
+import IBoardDataList from "@/Interfaces/IBoardDataList";
 import { createSlice } from "@reduxjs/toolkit";
 
-const boardDataInitialState: IBoardData = {
-  boardName: "",
-  ownerUserId: "",
-  boardCategories: "",
-  userCommentsMasked: true,
-  isBoardLocked: false,
-  createdAt: "",
-  dataList: [],
+const boardDataInitialState: IBoardDataList = {
+  BoardDataList: [],
 };
 
 export const boardSlice = createSlice({
   name: "board",
   initialState: boardDataInitialState,
   reducers: {
-    deleteBoardData: (state) => {
-      state.boardName = null;
-      state.ownerUserId = null;
-      state.boardCategories = null;
-      state.userCommentsMasked = null;
-      state.isBoardLocked = null;
-      state.createdAt = null;
-      state.dataList.length = 0;
+    addBoardDataToBoardDataList: (state, action) => {
+      state.BoardDataList = [
+        ...state.BoardDataList,
+        action.payload?.NewBoardData,
+      ];
     },
-    updateBoardData: (state, action) => {
-      state.boardName = action.payload?.boardName;
-      state.ownerUserId = action.payload?.ownerUserId;
-      state.boardCategories = action.payload?.boardCategories;
-      state.userCommentsMasked = action.payload?.userCommentsMasked;
-      state.isBoardLocked = action.payload?.isBoardLocked;
-      state.createdAt = action.payload?.createdAt;
-      state.dataList = action.payload?.dataList;
+    deleteBoardDataById: (state, action) => {
+      state.BoardDataList = state.BoardDataList?.filter(
+        (boardData) => boardData.Id !== action.payload.BoardId
+      );
     },
-    updateBoardDataComment: (state, action) => {
-      state.dataList = [...state.dataList, action.payload];
+    updateBoardDataById: (state, action) => {
+      state.BoardDataList = state.BoardDataList?.filter(
+        (boardData) => boardData.Id !== action.payload.BoardId
+      );
+
+      state.BoardDataList = [...state.BoardDataList, action.payload?.BoardData];
+    },
+    addBoardDataCommentById: (state, action) => {
+      state.BoardDataList.forEach((data) => {
+        if (data.Id === action.payload.BoardId) {
+          data.commentDataList = [
+            ...data.commentDataList,
+            action.payload.NewComment,
+          ];
+          return;
+        }
+      });
+    },
+    updateBoardDataCommentById: (state, { payload }) => {
+      state.BoardDataList.forEach((data) => {
+        if (data.Id === payload.BoardId) {
+          data.commentDataList = data?.commentDataList?.filter(
+            (comments) => comments.Id !== payload?.UpdatedComment?.Id
+          );
+
+          data.commentDataList = [
+            ...data.commentDataList,
+            payload?.UpdatedComment,
+          ];
+          return;
+        }
+      });
     },
     deleteBoardDataCommentById: (state, action) => {
-      state.dataList = state.dataList?.filter(
-        (item) => item.Id !== action.payload?.Id
-      );
+      state.BoardDataList.forEach((data) => {
+        if (data.Id === action.payload.BoardId) {
+          data.commentDataList = data.commentDataList.filter(
+            (comments) => comments.Id !== action.payload?.CommentId
+          );
+          return;
+        }
+      });
     },
   },
 });
 
 export const {
-  updateBoardData,
-  deleteBoardData,
-  updateBoardDataComment,
+  addBoardDataToBoardDataList,
+  deleteBoardDataById,
+  updateBoardDataById,
+  addBoardDataCommentById,
+  updateBoardDataCommentById,
   deleteBoardDataCommentById,
 } = boardSlice.actions;
 

@@ -15,12 +15,11 @@ import { FunctionComponent, MouseEvent, useState } from "react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
-import { updateBoardData } from "@/State/Slices/BoardSlice";
+import { addBoardDataToBoardDataList, updateBoardDataById } from "@/State/Slices/BoardSlice";
 import { updateLoginStateData } from "@/State/Slices/LoginSlice";
 import IBoardData from "@/Interfaces/IBoardData";
 import ILoginState from "@/Interfaces/ILoginState";
 import { v4 as uuidv4 } from 'uuid';
-
 
 const BoardItemSchecma = z.object({
     Id: z.string(),
@@ -34,7 +33,7 @@ const BoardItemSchecma = z.object({
 })
 
 const BoardSettingSchecma = z.object({
-    boardId: z.string().optional(),
+    Id: z.string().optional(),
     boardName: z
         .string()
         .default(`Retro Board ${new Date().toDateString()}`),
@@ -44,9 +43,9 @@ const BoardSettingSchecma = z.object({
         .min(3, "Your Full Name must contain atleast 3 characters long!")
         .max(50, "Your Full Name must contain atmost 50 characters long!"),
     boardCategories: z.string({ message: "Retro Board Categoies is required!" }),
-    userCommentsMasked: z.boolean().default(true),
-    isBoardLocked: z.boolean().default(false),
-    dataList: z.array(BoardItemSchecma).optional(),
+    userCommentsMasked: z.boolean().optional(),
+    isBoardLocked: z.boolean().optional(),
+    commentDataList: z.array(BoardItemSchecma).optional(),
     createdAt: z.string().default(new Date().toString())
 });
 
@@ -61,23 +60,24 @@ const BoardSettings: FunctionComponent<BoardSettingsProps> = (props) => {
     const dispatch = useDispatch();
     const router = useRouter();
     const loginStateData: ILoginState = useSelector(state => state.loginState);
+    const [commentsMasked, setCommentsMasked] = useState(props.boardData?.userCommentsMasked);
+    const [boardLocked, setBoardLocked] = useState(props.boardData?.isBoardLocked);
 
     if (props.isNew) {
         props.boardData = {
+            Id: uuidv4(),
             boardName: `Retro Board ${new Date().toDateString()}`,
             ownerUserId: loginStateData.loggedInUserId,
             boardCategories: "What Went Well 👌,To Improve 😊,Went Wrong 😢",
-            userCommentsMasked: true,
+            userCommentsMasked: false,
             isBoardLocked: false,
-            dataList: [],
+            commentDataList: [],
             createdAt: new Date().toString(),
         };
     }
 
     const [boardData, setBoardData] = useState(props.boardData);
     const [boardErrors, setBoardErrors] = useState({});
-    if (boardData !== undefined)
-        boardData.Id = uuidv4();
 
     //need to implement
     const handleChange = (e) => {
@@ -93,20 +93,28 @@ const BoardSettings: FunctionComponent<BoardSettingsProps> = (props) => {
             if (boardData?.boardCategories.length === 0 || (arr.length === 0 || arr.length > 3))
                 return setBoardErrors((prev) => ({ ...prev, boardCategories: "Retro Board Categories can have upto 3 categories only" }));
 
-            const validatedData = BoardSettingSchecma.parse(boardData);
             // validatedData.boardId = uuidv4();
+            const validatedData = BoardSettingSchecma.parse(boardData);
             validatedData.ownerUserId = loginStateData.loggedInUserId;
-            validatedData.dataList = [];
+            validatedData.commentDataList = props.isNew ? [] : props?.boardData?.commentDataList;
+            validatedData.userCommentsMasked = commentsMasked;
+            validatedData.isBoardLocked = boardLocked;
+
             setBoardData(validatedData);
             setBoardErrors({});
 
-            toast.success("Board Created Successfully!", {
+            toast.success(`Board ${props.isNew ? "Created" : "Updated"} Successfully!`, {
                 autoClose: 1500,
-                theme: "colored",
             });
 
             //save data logic
-            dispatch(updateBoardData(validatedData))
+            if (props.isNew)
+                dispatch(addBoardDataToBoardDataList({ NewBoardData: validatedData }))
+            else
+                dispatch(updateBoardDataById({
+                    BoardId: validatedData.Id,
+                    BoardData: validatedData,
+                }))
 
             //login the user if not did already
             if (!loginStateData.isLoggedIn) {
@@ -199,7 +207,7 @@ const BoardSettings: FunctionComponent<BoardSettingsProps> = (props) => {
                     value={boardData?.ownerName}
                     onChange={handleChange}
                 ></Input>
-                {boardErrors.ownerName && (
+                {boardErrors?.ownerName && (
                     <p className="text-red-600 text-sm font-medium">
                         {boardErrors?.ownerName}
                     </p>
@@ -226,20 +234,30 @@ const BoardSettings: FunctionComponent<BoardSettingsProps> = (props) => {
                 )}
             </div>
             <div className="flex items-center gap-x-3">
-                <Checkbox defaultChecked name="userCommentsMasked" checked={boardData?.userCommentsMasked} />
+                <Checkbox
+                    name="userCommentsMasked"
+                    onCheckedChange={(checked) => setCommentsMasked(!!checked)}
+                    checked={commentsMasked}
+                />
+                {/* <Checkbox name="userCommentsMasked" onChange={(e) => setCommentsMasked(e)} value={boardData?.userCommentsMasked} /> */}
                 <p className="font-medium text-base">
                     Mask User Comments
                     <span className="text-gray-600 text-xs px-1 font-medium">
-                        (No one is able to see others comments added in realtime)
+                        (No one will be able to see others comments added in realtime)
                     </span>
                 </p>
             </div>
             <div className="flex items-center gap-x-3">
-                <Checkbox name="isBoardLocked" checked={boardData?.isBoardLocked} />
+                <Checkbox
+                    name="isBoardLocked"
+                    onCheckedChange={(checked) => setBoardLocked(!!checked)}
+                    checked={boardLocked}
+                />
+                {/* <Checkbox name="isBoardLocked" onChange={(e) => setBoardLocked(e.target.checked)} value={boardData?.isBoardLocked} /> */}
                 <p className="font-medium text-base">
-                    Lock Board for All
+                    Lock Board for all commenters
                     <span className="text-gray-600 text-xs px-1 font-medium">
-                        (No one is able to add comment henceforth)
+                        (No one will be able to add comments henceforth)
                     </span>
                 </p>
             </div>

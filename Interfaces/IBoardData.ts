@@ -8,5 +8,5 @@ export default interface IBoardData {
   userCommentsMasked: boolean;
   isBoardLocked: boolean;
   createdAt: string;
-  dataList: IBoardItem[];
+  commentDataList: IBoardItem[];
 }

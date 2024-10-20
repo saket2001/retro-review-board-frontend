@@ -1,27 +1,22 @@
-import { Card, CardHeader } from "../../../card";
 import { Button } from "../../../button";
-import { Textarea } from "../../../textarea";
-import { z } from "zod";
-import { useDispatch, useSelector } from "react-redux";
-import ILoginState from "@/Interfaces/ILoginState";
-import { FunctionComponent, useState } from "react";
+import { useDispatch } from "react-redux";
+import { FunctionComponent } from "react";
 import { toast } from "react-toastify";
-import IBoardItem from "@/Interfaces/IBoardItem";
-import { deleteBoardDataCommentById, updateBoardDataComment } from "@/State/Slices/BoardSlice";
-import IBoardData from "@/Interfaces/IBoardData";
+import { deleteBoardDataCommentById } from "@/State/Slices/BoardSlice";
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
-    DropdownMenuGroup,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
 
 interface BoardItemDropdownProps {
+    BoardId: string,
     commentId: string | undefined,
     loggedInUserId: string,
+    handleEditCommentFn: any,
 }
 
 
@@ -32,9 +27,18 @@ const BoardItemDropdown: FunctionComponent<BoardItemDropdownProps> = (props) => 
         try {
             //get comment id
             //call store to delete it from store
-            dispatch(deleteBoardDataCommentById({ Id: props?.commentId }))
+            dispatch(deleteBoardDataCommentById({ BoardId: props?.BoardId, CommentId: props?.commentId }))
 
             //call api endpoint
+        }
+        catch (error) {
+            toast.error(error?.message);
+        }
+    }
+
+    const handleEditComment = () => {
+        try {
+            props.handleEditCommentFn(true);
         }
         catch (error) {
             toast.error(error?.message);
@@ -44,14 +48,14 @@ const BoardItemDropdown: FunctionComponent<BoardItemDropdownProps> = (props) => 
     return (
         <DropdownMenu>
             <DropdownMenuTrigger>
-                <Button variant={"secondary"}>
+                <Button variant={"ghost"} className="rounded-full">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 12.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 18.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5Z" />
                     </svg>
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-                <DropdownMenuItem>
+                <DropdownMenuItem onClick={handleEditComment}>
                     Edit
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={handleCommentDelete}>

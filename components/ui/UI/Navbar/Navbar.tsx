@@ -32,11 +32,14 @@ const Navbar: FunctionComponent<Props> = () => {
                 <Link href={"/"}>Retro Board</Link>
             </h1>
 
-            <div className="mx-3 flex items-center justify-evenly gap-x-3">
+            <div className="mx-3 flex items-center justify-evenly gap-x-5">
                 <Button variant={"link"} className="px-0">
                     <Link href={"/"}>Home</Link>
                 </Button>
-                <Button variant={"link"}>
+                {loginStateData.isLoggedIn && <Button variant={"link"} className="px-0">
+                    <Link href={"/board"}>My Boards</Link>
+                </Button>}
+                <Button variant={"link"} className="px-0">
                     <Link href={"/board/create-board"}>Create Board</Link>
                 </Button>
                 {loginStateData.isLoggedIn ? <Button>
