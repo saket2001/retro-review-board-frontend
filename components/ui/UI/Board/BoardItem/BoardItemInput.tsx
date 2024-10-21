@@ -1,15 +1,17 @@
-import { Card, CardHeader } from "../../../card";
-import { Button } from "../../../button";
+import { Card, CardHeader } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Textarea } from "../../../textarea";
-import { z } from "zod";
 import { useDispatch, useSelector } from "react-redux";
 import ILoginState from "@/Interfaces/ILoginState";
 import { FunctionComponent, useState } from "react";
 import { toast } from "react-toastify";
 import IBoardItem from "@/Interfaces/IBoardItem";
 import { addBoardDataCommentById, updateBoardDataCommentById } from "@/State/Slices/BoardSlice";
-import IBoardData from "@/Interfaces/IBoardData";
 import { v4 as uuidv4 } from 'uuid';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+import TurndownService from 'turndown';
+
 
 interface BoardItemInputProps {
     boardId: string,
@@ -19,9 +21,19 @@ interface BoardItemInputProps {
     handleEditCommentFn: unknown,
 }
 
+const modules = {
+    toolbar: [
+        [{ 'header': [1, 2, false] }],
+        ['bold', 'italic', 'underline', 'strike'],
+        [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+        ['link'],
+    ],
+};
+
 
 const BoardItemInput: FunctionComponent<BoardItemInputProps> = (props) => {
     const dispatch = useDispatch();
+    const turndownService = new TurndownService();
     const [userComment, setUserComment] = useState(props?.boardItemData?.comment ?? "");
     const loginData: ILoginState = useSelector((state) => state.loginState);
     // const boardData: IBoardData = useSelector((state) => state.boardState);
@@ -31,8 +43,11 @@ const BoardItemInput: FunctionComponent<BoardItemInputProps> = (props) => {
             //preventing form reload
             e.preventDefault();
 
-            const modifiedComment = userComment?.trim().substring(0, 1).toUpperCase() + userComment?.trim().substring(1, userComment?.length);
-            const commentTrimmedLength = modifiedComment.length;
+            // const modifiedComment: string = userComment?.trim();
+            // const modifiedComment = userComment?.trim().substring(0, 1).toUpperCase() + userComment?.trim().substring(1, userComment?.length);
+            const modifiedComment: string = turndownService.turndown(userComment?.trim());
+            const commentTrimmedLength: number = modifiedComment?.length;
+
 
             //checking if input is empty
             if (commentTrimmedLength === 0) {
@@ -88,14 +103,16 @@ const BoardItemInput: FunctionComponent<BoardItemInputProps> = (props) => {
 
     return (
         <Card className="rounded-md">
-            <CardHeader className="w-100">
+            <CardHeader className="w-100 px-4">
                 <form className="flex flex-col gap-x-3">
-                    <Textarea
-                        placeholder="Enter your comment here..."
-                        name="boardComment"
-                        className="my-2"
+                    <ReactQuill
                         value={userComment}
-                        onChange={(e) => { setUserComment(e.target.value) }} />
+                        className="my-2"
+                        theme="snow"
+                        onChange={setUserComment}
+                        modules={modules}
+                        placeholder="Write your comment here..."
+                    />
 
                     <div className="flex gap-x-4 py-1">
                         <Button onClick={(e) => handleSave(e)} className="w-fit" size={"sm"}>Save</Button>
