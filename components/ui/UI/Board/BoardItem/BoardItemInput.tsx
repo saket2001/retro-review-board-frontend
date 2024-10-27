@@ -43,6 +43,7 @@ const BoardItemInput: FunctionComponent<BoardItemInputProps> = (props) => {
             //preventing form reload
             e.preventDefault();
 
+            //converting the html into markdown
             // const modifiedComment: string = userComment?.trim();
             // const modifiedComment = userComment?.trim().substring(0, 1).toUpperCase() + userComment?.trim().substring(1, userComment?.length);
             const modifiedComment: string = turndownService.turndown(userComment?.trim());
