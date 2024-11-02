@@ -88,7 +88,6 @@ const BoardItemInput: FunctionComponent<BoardItemInputProps> = (props) => {
             if (!props?.IsItemNew) props?.handleEditCommentFn(false);
         }
         catch (error: unknown) {
-            console.log(error);
             toast.error(error?.message, { autoClose: 1500 });
         }
     }
@@ -97,7 +96,6 @@ const BoardItemInput: FunctionComponent<BoardItemInputProps> = (props) => {
         try {
             props.handleEditCommentFn(false);
         } catch (error: unknown) {
-            console.log(error);
             toast.error(error?.message, { autoClose: 1500 });
         }
     }

@@ -32,7 +32,6 @@ export default function GuestLogin() {
             //call db to create new user
             const guestData = { isGuest: true, fullName: guestName, userName: "", password: "" }
             const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/guest-signup`, guestData);
-            console.log(res);
 
             if (res?.data?.IsError) {
                 toast.error(res?.data?.Message, { autoClose: 1500 });
@@ -58,7 +57,6 @@ export default function GuestLogin() {
                 router.push("/board")
             }
         } catch (error) {
-            console.log(error);
             toast.error("Something went wrong");
         }
     }

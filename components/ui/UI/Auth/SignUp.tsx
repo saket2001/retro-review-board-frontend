@@ -1,40 +1,133 @@
 import {
-    Card,
-    CardContent,
-    CardFooter,
-    CardHeader,
-    CardDescription
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardDescription
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/Components/ui/button";
+import { z } from "zod";
+import { useState } from "react";
+import { toast } from "react-toastify";
+import IUser from "@/Interfaces/IUser";
+import { useDispatch } from "react-redux";
+import { useRouter } from "next/navigation";
+import { updateLoginStateData } from "@/State/Slices/LoginSlice";
+import axios from "axios";
+import Cookies from 'js-cookie';
+
+const NewUserSchecma = z.object({
+  fullName: z.string().min(3, "Your Full Name must contain atleast 3 characters long!")
+    .max(100, "Your Full Name must contain atmost 100 characters long!"),
+  userName: z
+    .string()
+    .min(3, "Your username must contain atleast 3 characters long!")
+    .max(50, "Your Full Name must contain atmost 50 characters long!"),
+  password: z.string().min(1, "Your password must contain atleast 1 characters long!")
+    .max(30, "Your password must contain atmost 30 characters long!"),
+  isGuest: z.boolean().default(false)
+});
 
 
-export default function SignUpForm(){
-    return (
-        <Card className="bg-gray-100">
-        <CardHeader>
-          <CardDescription>
-            Add your details here. After saving, you'll be headed to the board.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-2">
+export default function SignUpForm() {
+  const router = useRouter();
+  const dispatch = useDispatch();
+  const [userData, setUserData] = useState<IUser>();
+  const [formErrors, setFormErrors] = useState({});
+
+  const handleInputChange = (e: MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    const { name, value } = e.target;
+    setUserData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleFormSubmit = async (e: MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    try {
+      e.preventDefault();
+
+      //validate form data
+      const validatedData = NewUserSchecma.parse(userData);
+
+      setUserData(validatedData);
+      setFormErrors({});
+
+      //call db to save user
+      //login the user if not did already
+      const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/user-signup`, validatedData)
+
+      if (res?.data?.IsError) {
+        toast.error(res?.data?.Message);
+        return;
+      } else {
+        toast.success(res?.data?.Message);
+
+        const result = res?.data?.Result;
+        //handle state
+        dispatch(updateLoginStateData({
+          isLoggedIn: true,
+          loginToken: result?.accessToken,
+          loggedInUserId: result?.user?.loggedInUserId,
+          loggedInUserName: result?.user?.loggedInUserName,
+          loginTokenExpiresIn: "",
+          isGuestUser: false,
+        }))
+
+        //storing refresh tokken
+        Cookies.set('login-refresh-token', result?.refreshToken, { expires: 1, path: '/' });
+
+        setTimeout(() => router.push("/board"), 2000);
+      }
+
+    } catch (err) {
+      const validationErrors = err?.flatten().fieldErrors;
+      setFormErrors(validationErrors);
+    }
+  }
+
+  return (
+    <Card className="bg-gray-100">
+      <CardHeader>
+        <CardDescription>
+          Add your details here. After saving, you'll be headed to the board.
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-2">
+        <form>
           <div className="space-y-1">
             <Label htmlFor="fullname">Full Name</Label>
-            <Input id="fullname" />
+            <Input id="fullname" name="fullName" value={userData?.fullName} onChange={handleInputChange} />
+            {formErrors?.fullName && (
+              <p className="text-red-600 text-sm font-medium">
+                {formErrors?.fullName}
+              </p>
+            )}
           </div>
           <div className="space-y-1">
             <Label htmlFor="username">Username</Label>
-            <Input id="username" type="password" />
+            <Input id="username" type="text" name="userName" value={userData?.userName} onChange={handleInputChange} />
+            {formErrors?.userName && (
+              <p className="text-red-600 text-sm font-medium">
+                {formErrors?.userName}
+              </p>
+            )}
           </div>
           <div className="space-y-1">
             <Label htmlFor="password">Password</Label>
-            <Input id="password" type="password" />
+            <Input id="password" type="password" name="password" value={userData?.password} onChange={handleInputChange} />
+            {formErrors?.password && (
+              <p className="text-red-600 text-sm font-medium">
+                {formErrors?.password}
+              </p>
+            )}
           </div>
-        </CardContent>
-        <CardFooter>
-          <Button>Submit</Button>
-        </CardFooter>
-      </Card>
-    );
+        </form>
+      </CardContent>
+      <CardFooter>
+        <Button type="submit" onClick={(e) => handleFormSubmit(e)}>Submit</Button>
+      </CardFooter>
+    </Card>
+  );
 }
+
+

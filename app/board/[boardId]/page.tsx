@@ -30,7 +30,6 @@ export default function BoardDetails({
         setBoardDataState(boardDataList?.BoardDataList?.find(d => d?.Id === params?.boardId));
     }, [boardDataList, params?.boardId])
 
-    // console.log({ boardDataState });
 
     const canUpdateBoardSetting: boolean = loginData?.loggedInUserId === boardDataState?.ownerUserId;
 

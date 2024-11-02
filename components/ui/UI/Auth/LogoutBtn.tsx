@@ -34,7 +34,6 @@ export const LogoutBtn = () => {
 
             router.push("/auth");
         } catch (error) {
-            console.log(error);
             toast.error("Something went wrong")
         }
     }

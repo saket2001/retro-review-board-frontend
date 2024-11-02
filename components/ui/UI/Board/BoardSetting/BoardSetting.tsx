@@ -79,7 +79,6 @@ const BoardSettings: FunctionComponent<BoardSettingsProps> = (props) => {
     const [boardData, setBoardData] = useState(props.boardData);
     const [boardErrors, setBoardErrors] = useState({});
 
-    //need to implement
     const handleChange = (e) => {
         const { name, value } = e.target;
         setBoardData((prev) => ({ ...prev, [name]: value }));
@@ -129,12 +128,12 @@ const BoardSettings: FunctionComponent<BoardSettingsProps> = (props) => {
 
             setTimeout(() => router.push("/board"), 2000);
         } catch (err) {
-            console.log(err);
             const validationErrors = err?.flatten().fieldErrors;
             setBoardErrors(validationErrors);
         }
     };
 
+    //TODO need to implement
     const handleFormShare = (e: MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.preventDefault();
     };
