@@ -2,51 +2,16 @@
 // import { FunctionComponent } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Heading } from "@/Components/ui/UI/Heading/Heading";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/Components/ui/button";
-// import LoginForm from "@/components/ui/UI/Auth/Login";
-// import SignUpForm from "@/components/ui/UI/Auth/SignUp";
-import { useRouter } from 'next/navigation'
-import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { updateLoginStateData } from "@/State/Slices/LoginSlice";
-import { toast } from "react-toastify";
-import { v4 as uuidv4 } from 'uuid';
+import LoginForm from "@/components/ui/UI/Auth/Login";
+import SignUpForm from "@/components/ui/UI/Auth/SignUp";
+
+import GuestLogin from "@/components/ui/UI/Auth/GuestLogin";
 
 // interface WelcomeAuthProps {}
 
 const WelcomeAuth = () => {
-  const router = useRouter();
-  const dispatch = useDispatch()
-  const [guestName, setGuestName] = useState("");
 
-  const HandleGuestLogin = (e) => {
-    e.preventDefault();
-    if (guestName.length === 0)
-      return toast.error("Please enter your full name", { autoClose: 1500 });
 
-    // dispatch(toggleLogin())
-    //will get set values from db req
-    dispatch(updateLoginStateData({
-      isLoggedIn: true,
-      loginToken: "",
-      loggedInUserId: uuidv4(),
-      loggedInUserName: guestName,
-      loginTokenExpiresIn: "",
-    }))
-
-    //add board id
-    router.push("/board")
-  }
 
   return (
     <section className="w-full h-full flex items-center justify-center">
@@ -65,46 +30,13 @@ const WelcomeAuth = () => {
               <TabsTrigger value="new-user">Sign Up</TabsTrigger>
             </TabsList>
             <TabsContent value="guest">
-              <Card className="bg-gray-100">
-                <CardHeader>
-                  <CardTitle>Greeting Guest</CardTitle>
-                  <CardDescription>
-                    Add your Full Name here. Click save when you're
-                    done to head to the board
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-2">
-                  <div className="space-y-1">
-                    <Label htmlFor="fullname">Full Name</Label>
-                    <Input className="border border-gray-500" onChange={(e) => setGuestName(e.target.value)} id="fullname" />
-                  </div>
-                </CardContent>
-                <CardFooter>
-                  <Button onClick={(e) => { HandleGuestLogin(e) }}>Save & Continue</Button>
-                </CardFooter>
-              </Card>
+              <GuestLogin />
             </TabsContent>
             <TabsContent value="user">
-              {/* <LoginForm/> */}
-              <Card className="bg-gray-100">
-                <CardContent className="space-y-2 px-2 py-4">
-                  <Heading variant="h3"
-                    title="Login will be available soon"
-                    extraStyles="font-semibold text-base"
-                  />
-                </CardContent>
-              </Card>
+              <LoginForm />
             </TabsContent>
             <TabsContent value="new-user">
-              {/* <SignUpForm/> */}
-              <Card className="bg-gray-100">
-                <CardContent className="space-y-2 px-2 py-4">
-                  <Heading variant="h3"
-                    title="Sign up will be available soon"
-                    extraStyles="font-semibold text-base"
-                  />
-                </CardContent>
-              </Card>
+              <SignUpForm />
             </TabsContent>
           </Tabs>
         </form>

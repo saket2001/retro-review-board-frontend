@@ -7,6 +7,7 @@ const initialLoginSliceState: ILoginState = {
   loggedInUserId: "",
   loggedInUserName: "",
   loginTokenExpiresIn: "",
+  isGuestUser: false,
 };
 
 export const loginSlice = createSlice({
@@ -25,6 +26,7 @@ export const loginSlice = createSlice({
       state.loggedInUserId = action.payload?.loggedInUserId;
       state.loggedInUserName = action.payload?.loggedInUserName;
       state.loginTokenExpiresIn = action.payload?.loginTokenExpiresIn;
+      state.isGuestUser = action.payload?.isGuestUser;
     },
   },
 });

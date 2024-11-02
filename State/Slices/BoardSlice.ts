@@ -27,6 +27,9 @@ export const boardSlice = createSlice({
 
       state.BoardDataList = [...state.BoardDataList, action.payload?.BoardData];
     },
+    clearBoardData: (state) => {
+      state.BoardDataList.length = 0;
+    },
     addBoardDataCommentById: (state, action) => {
       state.BoardDataList.forEach((data) => {
         if (data.Id === action.payload.BoardId) {
@@ -73,6 +76,7 @@ export const {
   addBoardDataCommentById,
   updateBoardDataCommentById,
   deleteBoardDataCommentById,
+  clearBoardData,
 } = boardSlice.actions;
 
 export default boardSlice.reducer;
