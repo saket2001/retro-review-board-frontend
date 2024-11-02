@@ -11,7 +11,6 @@ export default function BoardSettingPage({
     params: { boardId: string };
 }) {
     const boardDataList: IBoardDataList = useSelector((state) => state.boardState);
-    console.log(boardDataList);
 
     return (
         <section className="flex flex-col items-center px-3 py-2">

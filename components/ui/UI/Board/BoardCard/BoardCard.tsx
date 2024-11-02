@@ -19,7 +19,6 @@ const BoardCard: FunctionComponent<BoardCardProps> = (props) => {
             dispatch(deleteBoardDataById({ BoardId: props.boardData?.Id }));
             toast.success(`Deleted Board ${props.boardData?.boardName}`, { autoClose: 1500 })
         } catch (error) {
-            console.log(error?.message);
             toast.error(error.message, { autoClose: 1500 })
         }
     }

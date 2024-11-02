@@ -4,4 +4,5 @@ export default interface ILoginState {
   loggedInUserId: string;
   loggedInUserName: string;
   loginTokenExpiresIn: string;
+  isGuestUser: boolean;
 }

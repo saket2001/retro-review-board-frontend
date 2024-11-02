@@ -11,6 +11,7 @@ export function ReduxProvider({ children }) {
       position="bottom-right"
       newestOnTop={true}
       closeOnClick
+      autoClose={1500}
     />
   </Provider>
 }
