@@ -1,8 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import IBoardData from "@/Interfaces/IBoardData";
 import { FunctionComponent } from "react";
-import { Heading } from "../../Heading/Heading";
-import { Button } from "@/Components/ui/button";
+import Heading from "../../HeadingComponent/Heading";
+import { Button } from "@/components/ui/MyButton";
 import Link from "next/link";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";

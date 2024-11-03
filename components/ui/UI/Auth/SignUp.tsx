@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Button } from "@/Components/ui/button";
+import { Button } from "@/components/ui/MyButton";
 import { z } from "zod";
 import { useState } from "react";
 import { toast } from "react-toastify";
@@ -30,27 +30,36 @@ const NewUserSchecma = z.object({
   isGuest: z.boolean().default(false)
 });
 
+type INewUserLogin = z.infer<typeof NewUserSchecma>;
 
 export default function SignUpForm() {
   const router = useRouter();
   const dispatch = useDispatch();
   const [userData, setUserData] = useState<IUser>();
-  const [formErrors, setFormErrors] = useState({});
+  const [formErrors, setFormErrors] = useState<INewUserLogin>();
 
-  const handleInputChange = (e: MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    const { name, value } = e.target;
-    setUserData((prev) => ({ ...prev, [name]: value }));
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+
+    setUserData((prev) => {
+      if (prev) {
+        return {
+          ...prev,
+          [name]: value, // dynamically updating `userName`, `password`, or `isGuest`
+        };
+      }
+      return undefined; // handle initial undefined state if needed
+    });
   };
 
-  const handleFormSubmit = async (e: MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const handleFormSubmit = async () => {
     try {
-      e.preventDefault();
 
       //validate form data
       const validatedData = NewUserSchecma.parse(userData);
 
       setUserData(validatedData);
-      setFormErrors({});
+      // setFormErrors();
 
       //call db to save user
       //login the user if not did already
@@ -89,7 +98,7 @@ export default function SignUpForm() {
     <Card className="bg-gray-100">
       <CardHeader>
         <CardDescription>
-          Add your details here. After saving, you'll be headed to the board.
+          Add your details here. After saving, you&apos;ll be headed to the board.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-2">
@@ -124,7 +133,7 @@ export default function SignUpForm() {
         </form>
       </CardContent>
       <CardFooter>
-        <Button type="submit" onClick={(e) => handleFormSubmit(e)}>Submit</Button>
+        <Button type="submit" onClick={(e) => { e.preventDefault(); handleFormSubmit() }}>Submit</Button>
       </CardFooter>
     </Card>
   );

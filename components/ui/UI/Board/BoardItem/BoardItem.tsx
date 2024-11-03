@@ -1,6 +1,6 @@
 import { Card, CardDescription, CardFooter, CardHeader } from "@/components/ui/card";
 import IBoardItem from "@/Interfaces/IBoardItem";
-import BoardItemReact from "./BoardItemReact";
+// import BoardItemReact from "./BoardItemReact";
 import BoardItemDropdown from "./BoardItemDropdown";
 import { useState } from "react";
 import { toast } from "react-toastify";
@@ -8,8 +8,8 @@ import BoardItemInput from "./BoardItemInput";
 import ReactMarkdown from 'react-markdown';
 
 interface BoardItem {
-    BoardId: string,
-    data?: IBoardItem,
+    BoardId: string | undefined,
+    data?: IBoardItem | undefined,
     loggedInUserId: string,
     boardItemCategory: string,
     maskUserComments: boolean,

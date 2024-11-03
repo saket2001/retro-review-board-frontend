@@ -8,8 +8,8 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Button } from "@/Components/ui/button";
-import { MouseEvent, useState } from "react";
+import { Button } from "@/components/ui/MyButton";
+import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { updateLoginStateData } from "@/State/Slices/LoginSlice";
@@ -22,10 +22,9 @@ export default function GuestLogin() {
     const dispatch = useDispatch();
     const [guestName, setGuestName] = useState("");
 
-    const HandleGuestLogin = async (e: MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    const HandleGuestLogin = async () => {
         try {
-
-            e.preventDefault();
+            // e.preventDefault();
             if (guestName.length === 0)
                 return toast.error("Please enter your full name", { autoClose: 1500 });
 
@@ -56,7 +55,7 @@ export default function GuestLogin() {
                 //add board id if came from link
                 router.push("/board")
             }
-        } catch (error) {
+        } catch {
             toast.error("Something went wrong");
         }
     }
@@ -66,7 +65,7 @@ export default function GuestLogin() {
             <CardHeader>
                 <CardTitle>Greeting Guest</CardTitle>
                 <CardDescription>
-                    Add your Full Name here. Click save when you're
+                    Add your Full Name here. Click save when you&apos;re
                     done to head to the board
                 </CardDescription>
             </CardHeader>
@@ -77,7 +76,7 @@ export default function GuestLogin() {
                 </div>
             </CardContent>
             <CardFooter>
-                <Button onClick={(e) => { HandleGuestLogin(e) }}>Save & Continue</Button>
+                <Button onClick={(e) => { e.preventDefault(); HandleGuestLogin() }}>Save & Continue</Button>
             </CardFooter>
         </Card>
     );

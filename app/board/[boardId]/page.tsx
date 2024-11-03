@@ -1,16 +1,15 @@
 "use client";
 import BoardList from "../../../components/ui/UI/Board/BoardList/BoardList";
-import { Heading } from "../../../Components/ui/UI/Heading/Heading";
-import { Button } from "../../../Components/ui/button";
+import Heading from "../../../components/ui/UI/HeadingComponent/Heading";
+import { Button } from "../../../components/ui/MyButton";
 import IBoardData from "../../../Interfaces/IBoardData";
 import IBoardDataList from "../../../Interfaces/IBoardDataList";
 import ILoginState from "../../../Interfaces/ILoginState";
 import { BoardDownloadIcon } from "../../../components/ui/UI/Board/BoardDownloadIcon/BoardDownloadIcon";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Router } from "next/router";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useAppSelector } from "../../../State/stateExports";
 import { toast } from "react-toastify";
 
 
@@ -22,8 +21,8 @@ export default function BoardDetails({
     const router = useRouter();
     const [boardDataState, setBoardDataState] = useState<IBoardData>();
     const [retroBoardTitles, setRetroBoardTitles] = useState<string[]>([]);
-    const loginData: ILoginState = useSelector((state) => state.loginState);
-    const boardDataList: IBoardDataList = useSelector((state) => state.boardState);
+    const loginData: ILoginState = useAppSelector((state) => state.loginState);
+    const boardDataList: IBoardDataList = useAppSelector((state) => state.boardState);
 
     useEffect(() => {
         //api logic
@@ -51,7 +50,7 @@ export default function BoardDetails({
     return (
         <section className="flex flex-col px-3 py-2 h-full w-full">
             <section className="flex gap-x-3 justify-between items-center px-2">
-                <Heading title={boardDataState?.boardName} variant="h2" extraStyles="font-semibold text-gray-900" />
+                <Heading title={boardDataState?.boardName ?? ""} variant="h2" extraStyles="font-semibold text-gray-900" />
                 <div className="flex items-center gap-x-4">
                     {/* <p className="text-sm font-medium text-gray-700">
                         Saved

@@ -1,16 +1,16 @@
 "use client";
-import { Heading } from "../../Components/ui/UI/Heading/Heading";
+import Heading from "../../components/ui/UI/HeadingComponent/Heading";
 import IBoardDataList from "../../Interfaces/IBoardDataList";
 import ILoginState from "../../Interfaces/ILoginState";
 import BoardCard from "../../components/ui/UI/Board/BoardCard/BoardCard";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useAppSelector } from "../../State/stateExports";
 
 export default function BoardHome() {
     const router = useRouter();
-    const loginData: ILoginState = useSelector((state) => state.loginState);
-    const boardDataList: IBoardDataList = useSelector((state) => state.boardState);
+    const loginData: ILoginState = useAppSelector((state) => state.loginState);
+    const boardDataList: IBoardDataList = useAppSelector((state) => state.boardState);
     const [boardDataListState, setBoardDataList] = useState<IBoardDataList>(boardDataList);
 
     useEffect(() => {

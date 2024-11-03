@@ -1,6 +1,6 @@
 "use client";
-import { useSelector } from "react-redux";
-import { Heading } from "../../../../components/ui/UI/Heading/Heading";
+import { useAppSelector } from "../../../../State/stateExports";
+import Heading from "../../../../components/ui/UI/HeadingComponent/Heading";
 import IBoardDataList from "../../../../Interfaces/IBoardDataList";
 import BoardSettings from "../../../../components/ui/UI/Board/BoardSetting/BoardSetting";
 import { Card, CardHeader, CardDescription, CardContent } from "@/components/ui/card";
@@ -10,7 +10,7 @@ export default function BoardSettingPage({
 }: {
     params: { boardId: string };
 }) {
-    const boardDataList: IBoardDataList = useSelector((state) => state.boardState);
+    const boardDataList: IBoardDataList = useAppSelector((state) => state.boardState);
 
     return (
         <section className="flex flex-col items-center px-3 py-2">

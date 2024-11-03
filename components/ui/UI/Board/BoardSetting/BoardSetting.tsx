@@ -1,6 +1,6 @@
 "use client";
 
-import { any, z } from "zod";
+import { z } from "zod";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -10,11 +10,11 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Button } from "@/Components/ui/button";
+import { Button } from "@/components/ui/MyButton";
 import { FunctionComponent, MouseEvent, useState } from "react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
-import { useDispatch, useSelector } from "react-redux";
+import { useAppDispatch, useAppSelector } from "../../../../../State/stateExports";
 import { addBoardDataToBoardDataList, updateBoardDataById } from "@/State/Slices/BoardSlice";
 import { updateLoginStateData } from "@/State/Slices/LoginSlice";
 import IBoardData from "@/Interfaces/IBoardData";
@@ -57,9 +57,9 @@ interface BoardSettingsProps {
 }
 
 const BoardSettings: FunctionComponent<BoardSettingsProps> = (props) => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const router = useRouter();
-    const loginStateData: ILoginState = useSelector(state => state.loginState);
+    const loginStateData: ILoginState = useAppSelector(state => state.loginState);
     const [commentsMasked, setCommentsMasked] = useState(props.boardData?.userCommentsMasked);
     const [boardLocked, setBoardLocked] = useState(props.boardData?.isBoardLocked);
 

@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Button } from "@/Components/ui/button";
+import { Button } from "@/components/ui/MyButton";
 import { z } from "zod";
 import { useState } from "react";
 import { toast } from "react-toastify";
@@ -33,22 +33,29 @@ export default function LoginForm() {
   const router = useRouter();
   const dispatch = useDispatch();
   const [userData, setUserData] = useState<IUserLogin>();
-  const [formErrors, setFormErrors] = useState({});
+  const [formErrors, setFormErrors] = useState<IUserLogin>();
 
-  const handleInputChange = (e: MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    const { name, value } = e.target;
-    setUserData((prev) => ({ ...prev, [name]: value }));
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+
+    setUserData((prev) => {
+      if (prev) {
+        return {
+          ...prev,
+          [name]: value,
+        };
+      }
+      return undefined;
+    });
   };
 
-  const handleFormSubmit = async (e: MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const handleFormSubmit = async () => {
     try {
-      e.preventDefault();
-
       //validate form data
       const validatedData = userSchecma.parse(userData);
 
       setUserData(validatedData);
-      setFormErrors({});
+      // setFormErrors({});
 
       //call db to save user
       //login the user if not did already
@@ -109,7 +116,7 @@ export default function LoginForm() {
         </div>
       </CardContent>
       <CardFooter>
-        <Button type="submit" onClick={(e) => handleFormSubmit(e)}>Submit</Button>
+        <Button type="submit" onClick={(e) => { e.preventDefault(); handleFormSubmit() }}>Submit</Button>
       </CardFooter>
     </Card>
   );
