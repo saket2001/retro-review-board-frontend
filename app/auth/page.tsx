@@ -1,11 +1,10 @@
 "use client";
 // import { FunctionComponent } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Heading } from "@/Components/ui/UI/Heading/Heading";
-import LoginForm from "@/components/ui/UI/Auth/Login";
-import SignUpForm from "@/components/ui/UI/Auth/SignUp";
-
-import GuestLogin from "@/components/ui/UI/Auth/GuestLogin";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../components/ui/tabs";
+import { Heading } from "../../Components/ui/UI/Heading/Heading";
+import LoginForm from "../../components/ui/UI/Auth/Login";
+import SignUpForm from "../../components/ui/UI/Auth/SignUp";
+import GuestLogin from "../../components/ui/UI/Auth/GuestLogin";
 
 // interface WelcomeAuthProps {}
 

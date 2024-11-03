@@ -1,8 +1,8 @@
 "use client";
 import { useSelector } from "react-redux";
-import { Heading } from "@/Components/ui/UI/Heading/Heading";
-import IBoardDataList from "@/Interfaces/IBoardDataList";
-import BoardSettings from "@/components/ui/UI/Board/BoardSetting/BoardSetting";
+import { Heading } from "../../../../components/ui/UI/Heading/Heading";
+import IBoardDataList from "../../../../Interfaces/IBoardDataList";
+import BoardSettings from "../../../../components/ui/UI/Board/BoardSetting/BoardSetting";
 import { Card, CardHeader, CardDescription, CardContent } from "@/components/ui/card";
 
 export default function BoardSettingPage({

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import "react-toastify/dist/ReactToastify.css";
-import Navbar from "@/Components/ui/UI/Navbar/Navbar";
+import Navbar from "../components/ui/UI/Navbar/Navbar";
 import { ReduxProvider } from "./redux-provider";
 
 const geistSans = localFont({

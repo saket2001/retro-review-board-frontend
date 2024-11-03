@@ -1,11 +1,11 @@
 "use client";
-import BoardList from "@/Components/ui/UI/Board/BoardList/BoardList";
-import { Heading } from "@/Components/ui/UI/Heading/Heading";
-import { Button } from "@/Components/ui/button";
-import IBoardData from "@/Interfaces/IBoardData";
-import IBoardDataList from "@/Interfaces/IBoardDataList";
-import ILoginState from "@/Interfaces/ILoginState";
-import { BoardDownloadIcon } from "@/components/ui/UI/Board/BoardDownloadIcon/BoardDownloadIcon";
+import BoardList from "../../../components/ui/UI/Board/BoardList/BoardList";
+import { Heading } from "../../../Components/ui/UI/Heading/Heading";
+import { Button } from "../../../Components/ui/button";
+import IBoardData from "../../../Interfaces/IBoardData";
+import IBoardDataList from "../../../Interfaces/IBoardDataList";
+import ILoginState from "../../../Interfaces/ILoginState";
+import { BoardDownloadIcon } from "../../../components/ui/UI/Board/BoardDownloadIcon/BoardDownloadIcon";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Router } from "next/router";
