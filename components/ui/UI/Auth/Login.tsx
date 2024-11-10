@@ -1,6 +1,7 @@
 import {
   Card,
   CardContent,
+  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -22,7 +23,7 @@ const userSchecma = z.object({
     .string()
     .min(3, "Your username must contain atleast 3 characters long!")
     .max(50, "Your Full Name must contain atmost 50 characters long!"),
-  password: z.string().min(1, "Your password must contain atleast 1 characters long!")
+  password: z.string().min(8, "Your password must contain atleast 8 characters!")
     .max(30, "Your password must contain atmost 30 characters long!"),
   isGuest: z.boolean().default(false)
 });
@@ -32,7 +33,7 @@ type IUserLogin = z.infer<typeof userSchecma>;
 export default function LoginForm() {
   const router = useRouter();
   const dispatch = useDispatch();
-  const [userData, setUserData] = useState<IUserLogin>();
+  const [userData, setUserData] = useState<IUserLogin>({ userName: "", password: "", isGuest: false });
   const [formErrors, setFormErrors] = useState<IUserLogin>();
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -54,10 +55,11 @@ export default function LoginForm() {
       //validate form data
       const validatedData = userSchecma.parse(userData);
 
-      setUserData(validatedData);
-      // setFormErrors({});
+      if (validatedData == undefined || Object.keys(validatedData).length == 0)
+        toast.error("Please fill all highlighted fields")
 
-      //call db to save user
+      setUserData(validatedData);
+
       //login the user if not did already
       const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/user-login`, validatedData)
 
@@ -85,8 +87,10 @@ export default function LoginForm() {
       }
 
     } catch (err) {
-      const validationErrors = err?.flatten().fieldErrors;
+      console.log(err);
+      const validationErrors = err.flatten().fieldErrors;
       setFormErrors(validationErrors);
+      toast.error("Please complete all highlighted fields to proceed")
     }
   }
 
@@ -94,10 +98,13 @@ export default function LoginForm() {
     <Card className="bg-gray-100">
       <CardHeader>
         <CardTitle>Welcome Back, User!</CardTitle>
+        <CardDescription>
+          It&apos;s good to see you visit us back.
+        </CardDescription>
       </CardHeader>
       <CardContent className="space-y-2">
         <div className="space-y-1">
-          <Label htmlFor="username">Username</Label>
+          <Label htmlFor="username">Username <span className="required">*</span></Label>
           <Input id="username" name="userName" value={userData?.userName} onChange={handleInputChange} />
           {formErrors?.userName && (
             <p className="text-red-600 text-sm font-medium">
@@ -106,7 +113,7 @@ export default function LoginForm() {
           )}
         </div>
         <div className="space-y-1">
-          <Label htmlFor="Password">Password</Label>
+          <Label htmlFor="Password">Password <span className="required">*</span></Label>
           <Input type="password" id="Password" name="password" value={userData?.password} onChange={handleInputChange} />
           {formErrors?.password && (
             <p className="text-red-600 text-sm font-medium">

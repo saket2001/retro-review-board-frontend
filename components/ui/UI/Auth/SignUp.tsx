@@ -3,7 +3,8 @@ import {
   CardContent,
   CardFooter,
   CardHeader,
-  CardDescription
+  CardDescription,
+  CardTitle
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -25,7 +26,7 @@ const NewUserSchecma = z.object({
     .string()
     .min(3, "Your username must contain atleast 3 characters long!")
     .max(50, "Your Full Name must contain atmost 50 characters long!"),
-  password: z.string().min(1, "Your password must contain atleast 1 characters long!")
+  password: z.string().min(8, "Your password must contain atleast 8 characters")
     .max(30, "Your password must contain atmost 30 characters long!"),
   isGuest: z.boolean().default(false)
 });
@@ -35,7 +36,7 @@ type INewUserLogin = z.infer<typeof NewUserSchecma>;
 export default function SignUpForm() {
   const router = useRouter();
   const dispatch = useDispatch();
-  const [userData, setUserData] = useState<IUser>();
+  const [userData, setUserData] = useState<IUser>({ fullName: "", userName: "", password: "", isGuest: false });
   const [formErrors, setFormErrors] = useState<INewUserLogin>();
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -54,14 +55,11 @@ export default function SignUpForm() {
 
   const handleFormSubmit = async () => {
     try {
-
       //validate form data
       const validatedData = NewUserSchecma.parse(userData);
 
       setUserData(validatedData);
-      // setFormErrors();
 
-      //call db to save user
       //login the user if not did already
       const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/user-signup`, validatedData)
 
@@ -91,20 +89,22 @@ export default function SignUpForm() {
     } catch (err) {
       const validationErrors = err?.flatten().fieldErrors;
       setFormErrors(validationErrors);
+      toast.error("Please complete all highlighted fields to proceed")
     }
   }
 
   return (
     <Card className="bg-gray-100">
       <CardHeader>
+        <CardTitle>Greetings User</CardTitle>
         <CardDescription>
-          Add your details here. After saving, you&apos;ll be headed to the board.
+          To start using retro board and save all details, fill all the below details. After saving, you&apos;ll be headed to the board page.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-2">
         <form>
           <div className="space-y-1">
-            <Label htmlFor="fullname">Full Name</Label>
+            <Label htmlFor="fullname">Full Name <span className="required">*</span></Label>
             <Input id="fullname" name="fullName" value={userData?.fullName} onChange={handleInputChange} />
             {formErrors?.fullName && (
               <p className="text-red-600 text-sm font-medium">
@@ -113,7 +113,7 @@ export default function SignUpForm() {
             )}
           </div>
           <div className="space-y-1">
-            <Label htmlFor="username">Username</Label>
+            <Label htmlFor="username">Username <span className="required">*</span> </Label>
             <Input id="username" type="text" name="userName" value={userData?.userName} onChange={handleInputChange} />
             {formErrors?.userName && (
               <p className="text-red-600 text-sm font-medium">
@@ -122,7 +122,7 @@ export default function SignUpForm() {
             )}
           </div>
           <div className="space-y-1">
-            <Label htmlFor="password">Password</Label>
+            <Label htmlFor="password">Password <span className="required">*</span></Label>
             <Input id="password" type="password" name="password" value={userData?.password} onChange={handleInputChange} />
             {formErrors?.password && (
               <p className="text-red-600 text-sm font-medium">
