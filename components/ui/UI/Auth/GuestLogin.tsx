@@ -24,7 +24,6 @@ export default function GuestLogin() {
 
     const HandleGuestLogin = async () => {
         try {
-            // e.preventDefault();
             if (guestName.length === 0)
                 return toast.error("Please enter your full name", { autoClose: 1500 });
 
@@ -65,13 +64,12 @@ export default function GuestLogin() {
             <CardHeader>
                 <CardTitle>Greeting Guest</CardTitle>
                 <CardDescription>
-                    Add your Full Name here. Click save when you&apos;re
-                    done to head to the board
+                    Add your Full Name below and click save to head to the board page
                 </CardDescription>
             </CardHeader>
             <CardContent className="space-y-2">
                 <div className="space-y-1">
-                    <Label htmlFor="fullname">Full Name</Label>
+                    <Label htmlFor="fullname">Full Name <span className="required">*</span></Label>
                     <Input className="border border-gray-500" onChange={(e) => setGuestName(e.target.value)} id="fullname" />
                 </div>
             </CardContent>
