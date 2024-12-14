@@ -1,5 +1,5 @@
 export default interface IBoardItem {
-  Id: string;
+  _id: string;
   comment: string;
   commenterId: string;
   commerterName: string;
