@@ -33,7 +33,8 @@ export const LogoutBtn = () => {
             dispatch(clearBoardData());
 
             router.push("/auth");
-        } catch {
+        } catch (error) {
+            console.log(error);
             toast.error("Something went wrong")
         }
     }

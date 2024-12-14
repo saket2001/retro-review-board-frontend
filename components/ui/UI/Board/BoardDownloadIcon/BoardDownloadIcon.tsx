@@ -1,4 +1,5 @@
 import React from 'react'
+import React from 'react'
 import * as XLSX from 'xlsx';
 import { Button } from '@/components/ui/MyButton'
 import IBoardData from '@/Interfaces/IBoardData';
@@ -78,7 +79,8 @@ export const BoardDownloadIcon = (props: downloadIconProps) => {
 
             // Clean up
             window.URL.revokeObjectURL(url);
-        } catch {
+        } catch (error) {
+            console.log(error);
             toast.error("No data available to export to excel!", { autoClose: 1500 });
             return;
         }

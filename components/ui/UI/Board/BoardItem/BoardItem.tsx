@@ -1,6 +1,5 @@
 import { Card, CardDescription, CardFooter, CardHeader } from "@/components/ui/card";
 import IBoardItem from "@/Interfaces/IBoardItem";
-// import BoardItemReact from "./BoardItemReact";
 import BoardItemDropdown from "./BoardItemDropdown";
 import { useState } from "react";
 import { toast } from "react-toastify";
@@ -17,7 +16,6 @@ interface BoardItem {
 
 const BoardItem = (props: BoardItem) => {
     const [editComment, setEditComment] = useState(false);
-    console.log(props.data);
 
     const handleEditCommentFn = (data: boolean) => {
         try {
