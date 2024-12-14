@@ -8,7 +8,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/MyButton";
-import { z } from "zod";
+import { z, ZodError } from "zod";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
@@ -35,7 +35,7 @@ export default function LoginForm() {
   const dispatch = useAppDispatch();
   const axiosHelper = new AxiosHelper();
   const [userData, setUserData] = useState<IUserLogin>({ userName: "", password: "", isGuest: false });
-  const [formErrors, setFormErrors] = useState({});
+  const [formErrors, setFormErrors] = useState<ZodError>();
   const [IsLoading, setIsLoading] = useState(false);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -48,11 +48,11 @@ export default function LoginForm() {
           [name]: value,
         };
       }
-      return undefined;
+      return prev;
     });
   };
 
-  const handleFormSubmit = async (e) => {
+  const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
       e.preventDefault();
       setIsLoading(true);
@@ -63,7 +63,6 @@ export default function LoginForm() {
         toast.error("Please fill all highlighted fields")
 
       setUserData(validatedData);
-      setFormErrors([]);
 
       const res = await axiosHelper.PostReq(`/auth/user-login`, validatedData)
 
@@ -94,8 +93,8 @@ export default function LoginForm() {
     } catch (err: unknown) {
       console.log(err);
       setIsLoading(false);
-      if (err !== undefined && err?.length > 0) {
-        const validationErrors = err?.flatten().fieldErrors;
+      if (err instanceof ZodError) {
+        const validationErrors = err.flatten().fieldErrors;
         setFormErrors(validationErrors);
       }
       toast.error("Something went wrong from our side. Please wait")

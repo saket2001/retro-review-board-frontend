@@ -8,7 +8,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/MyButton";
-import { z } from "zod";
+import { z, ZodError } from "zod";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import IUser from "@/Interfaces/IUser";
@@ -82,8 +82,8 @@ export default function SignUpForm() {
 
     } catch (err: unknown) {
       setIsLoading(false);
-      if (err !== undefined && err?.length > 0) {
-        const validationErrors = err?.flatten().fieldErrors;
+      if (err instanceof ZodError) {
+        const validationErrors = err.flatten().fieldErrors;
         setFormErrors(validationErrors);
       }
       toast.error("Something went wrong from our side. Please wait")

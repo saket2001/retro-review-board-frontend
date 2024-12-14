@@ -35,7 +35,7 @@ export default function BoardHome() {
 
 
     if (error) {
-        toast.error(error)
+        toast.error(error?.message)
     }
 
     const handlePostDeleteAction = () => {
@@ -54,7 +54,7 @@ export default function BoardHome() {
                     <div>
                         <Heading title={`Welcome ${loginData.loggedInUserName}`} variant="h1" extraStyles="lg:text-2xl" />
                     </div>
-                    {(boardDataListState == undefined || boardDataListState?.length === 0) && (
+                    {(boardDataListState == undefined || boardDataListState?.BoardDataList?.length === 0) && (
                         <div className="w-full h-full flex flex-col lg:justify-center lg:items-center lg:my-5 lg:py-4">
                             <Heading
                                 title="It looks like you have not created any board or are not part of any board"
@@ -65,9 +65,9 @@ export default function BoardHome() {
                         </div>
                     )}
                 </section>
-                {boardDataListState?.length > 0 &&
+                {boardDataListState?.BoardDataList?.length > 0 &&
                     <section className="grid lg:grid-cols-2 gap-3 lg:gap-x-8 py-4 px-1">
-                        {boardDataListState?.map((data) => (
+                        {boardDataListState?.BoardDataList.map((data) => (
                             <BoardCard key={data?._id} boardData={data} userData={loginData} handlePostDeleteAction={handlePostDeleteAction} />
                         ))}
                     </section>}

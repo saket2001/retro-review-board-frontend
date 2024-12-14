@@ -1,6 +1,6 @@
 "use client";
 
-import { z } from "zod";
+import { z, ZodError } from "zod";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -141,8 +141,8 @@ const BoardSettings: FunctionComponent<BoardSettingsProps> = (props) => {
         } catch (err: unknown) {
             console.log(err);
             setIsLoading(false);
-            if (err !== undefined && err?.length > 0) {
-                const validationErrors = err?.flatten().fieldErrors;
+            if (err instanceof ZodError) {
+                const validationErrors = err.flatten().fieldErrors;
                 setBoardErrors(validationErrors);
             }
         }

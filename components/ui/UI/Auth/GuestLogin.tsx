@@ -58,8 +58,7 @@ export default function GuestLogin() {
                 //add board id if came from link
                 router.push("/board")
             }
-        } catch (error) {
-            console.log(error);
+        } catch {
             setIsLoading(false)
             toast.error("Something went wrong from our side. Please wait");
         }
