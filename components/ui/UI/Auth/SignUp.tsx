@@ -45,7 +45,7 @@ export default function SignUpForm() {
     setUserData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleFormSubmit = async () => {
+  const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
       e.preventDefault();
       setIsLoading(true)

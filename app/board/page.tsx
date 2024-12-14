@@ -10,13 +10,14 @@ import { Loader } from "@/components/ui/UI/Loader/Loader";
 import { toast } from "react-toastify";
 import Heading from "@/components/ui/UI/HeadingComponent/Heading";
 import { useAppDispatch, useAppSelector } from "@/State/stateExports";
+import IBoardData from "@/Interfaces/IBoardData";
 
 export default function BoardHome() {
     const dispatch = useAppDispatch();
     const router = useRouter();
     const loginData: ILoginState = useAppSelector((state) => state.loginState);
     const boardDataList: IBoardDataList = useAppSelector((state) => state.boardState);
-    const [boardDataListState, setBoardDataList] = useState(boardDataList);
+    const [boardDataListState, setBoardDataList] = useState<IBoardData[]>(boardDataList?.BoardDataList);
 
     const { data, error, isLoading, refetch } = useQuery({
         queryKey: ["user-boards"],
@@ -54,7 +55,7 @@ export default function BoardHome() {
                     <div>
                         <Heading title={`Welcome ${loginData.loggedInUserName}`} variant="h1" extraStyles="lg:text-2xl" />
                     </div>
-                    {(boardDataListState == undefined || boardDataListState?.BoardDataList?.length === 0) && (
+                    {(boardDataListState == undefined || boardDataListState?.length === 0) && (
                         <div className="w-full h-full flex flex-col lg:justify-center lg:items-center lg:my-5 lg:py-4">
                             <Heading
                                 title="It looks like you have not created any board or are not part of any board"
@@ -65,9 +66,9 @@ export default function BoardHome() {
                         </div>
                     )}
                 </section>
-                {boardDataListState?.BoardDataList?.length > 0 &&
+                {boardDataListState?.length > 0 &&
                     <section className="grid lg:grid-cols-2 gap-3 lg:gap-x-8 py-4 px-1">
-                        {boardDataListState?.BoardDataList.map((data) => (
+                        {boardDataListState?.map((data) => (
                             <BoardCard key={data?._id} boardData={data} userData={loginData} handlePostDeleteAction={handlePostDeleteAction} />
                         ))}
                     </section>}
