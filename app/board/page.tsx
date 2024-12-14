@@ -24,7 +24,6 @@ export default function BoardHome() {
             const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/board/get-all-boards?userId=${loginData.loggedInUserId}`);
             if (!res.ok) throw new Error('Network response was not ok');
             const data = await res.json();
-            console.log(data);
             return data;
         }
     });
@@ -34,7 +33,7 @@ export default function BoardHome() {
         setBoardDataList(data?.Result);
     }, [data, dispatch])
 
-    console.log(boardDataListState);
+        (boardDataListState);
 
     if (error) {
         toast.error(error)

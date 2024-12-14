@@ -14,7 +14,6 @@ import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 import { updateLoginStateData } from "@/State/Slices/LoginSlice";
-import axios from "axios";
 import Cookies from 'js-cookie';
 import { Loader } from "../Loader/Loader";
 import AxiosHelper from "@/Helpers/AxiosHelper";

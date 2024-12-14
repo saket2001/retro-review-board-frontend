@@ -1,16 +1,11 @@
 "use client";
-import { FunctionComponent } from "react";
 import { Button } from "../../button";
 import Link from "next/link";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import ILoginState from "@/Interfaces/ILoginState";
 import { LogoutBtn } from "../Auth/LogoutBtn";
 
-interface Props {
-
-}
-
-const Navbar: FunctionComponent<Props> = () => {
+const Navbar = () => {
     const loginStateData: ILoginState = useSelector((state) => state.loginState);
 
     return (

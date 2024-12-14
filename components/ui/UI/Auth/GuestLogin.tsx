@@ -3,8 +3,7 @@ import {
     CardContent,
     CardFooter,
     CardHeader,
-    CardTitle,
-    CardDescription
+    CardTitle
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -61,6 +60,7 @@ export default function GuestLogin() {
                 router.push("/board")
             }
         } catch (error) {
+            console.log(error);
             setIsLoading(false)
             toast.error("Something went wrong from our side. Please wait");
         }
@@ -71,10 +71,8 @@ export default function GuestLogin() {
         <Card className="bg-gray-100">
             <CardHeader>
                 <CardTitle>Greeting Guest</CardTitle>
-                <CardDescription>
-                    Add your Full Name here. Click save when you're
-                    done to head to the board
-                </CardDescription>
+                Add your Full Name here. Click save when you&apos;re
+                done to head to the board
             </CardHeader>
             <CardContent className="space-y-2">
                 <div className="space-y-1">
@@ -85,7 +83,7 @@ export default function GuestLogin() {
             <CardFooter>
                 <Button onClick={(e) => { HandleGuestLogin(e) }}>Save & Continue</Button>
             </CardFooter>
-        </Card>
+        </Card >
     </>
     );
 }

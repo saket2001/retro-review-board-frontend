@@ -1,7 +1,6 @@
 "use client";
 import BoardList from "../../../components/ui/UI/Board/BoardList/BoardList";
 import { Heading } from "../../../Components/ui/UI/Heading/Heading";
-import { Button } from "../../../Components/ui/button";
 import IBoardData from "../../../Interfaces/IBoardData";
 import ILoginState from "../../../Interfaces/ILoginState";
 import { BoardDownloadIcon } from "../../../components/ui/UI/Board/BoardDownloadIcon/BoardDownloadIcon";
@@ -17,6 +16,7 @@ import IBoardDataList from "@/Interfaces/IBoardDataList";
 import { useQuery } from "@tanstack/react-query";
 import { Loader } from "@/components/ui/UI/Loader/Loader";
 import { addBoardDataToBoardDataList } from "@/State/Slices/BoardSlice";
+import { Button } from "@/components/ui/button";
 
 
 export default function BoardDetails({
@@ -56,10 +56,10 @@ export default function BoardDetails({
 
     const canUpdateBoardSetting: boolean = loginData?.loggedInUserId === boardDataState?.ownerUserId;
 
-    // if (!loginData.isLoggedIn) {
-    //     router.push("/auth");
-    //     return;
-    // }
+    if (!loginData.isLoggedIn) {
+        router.push("/auth");
+        return;
+    }
 
     if (boardDataState?.boardCategories && retroBoardTitles.length === 0) {
         setRetroBoardTitles(boardDataState?.boardCategories?.split(","));

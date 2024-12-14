@@ -16,7 +16,7 @@ interface BoardItemDropdownProps {
     BoardId: string,
     commentId: string | undefined,
     loggedInUserId: string,
-    handleEditCommentFn: any,
+    handleEditCommentFn: () => void,
 }
 
 
