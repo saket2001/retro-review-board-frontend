@@ -18,6 +18,7 @@ import { useRouter } from "next/navigation";
 import { updateLoginStateData } from "@/State/Slices/LoginSlice";
 import axios from "axios";
 import Cookies from 'js-cookie';
+import { Loader } from "../Loader/Loader";
 
 const NewUserSchecma = z.object({
   fullName: z.string().min(3, "Your Full Name must contain atleast 3 characters long!")
@@ -36,33 +37,27 @@ type INewUserLogin = z.infer<typeof NewUserSchecma>;
 export default function SignUpForm() {
   const router = useRouter();
   const dispatch = useDispatch();
-  const [userData, setUserData] = useState<IUser>({ fullName: "", userName: "", password: "", isGuest: false });
-  const [formErrors, setFormErrors] = useState<INewUserLogin>();
+  const [userData, setUserData] = useState<IUser>();
+  const [formErrors, setFormErrors] = useState({});
+  const [IsLoading, setIsLoading] = useState(false);
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-
-    setUserData((prev) => {
-      if (prev) {
-        return {
-          ...prev,
-          [name]: value, // dynamically updating `userName`, `password`, or `isGuest`
-        };
-      }
-      return undefined; // handle initial undefined state if needed
-    });
+  const handleInputChange = (e: MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    const { name, value } = e.target;
+    setUserData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleFormSubmit = async () => {
     try {
+      e.preventDefault();
+      setIsLoading(true)
       //validate form data
       const validatedData = NewUserSchecma.parse(userData);
 
       setUserData(validatedData);
-
-      //login the user if not did already
+      setFormErrors([]);
       const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/user-signup`, validatedData)
 
+      setIsLoading(false)
       if (res?.data?.IsError) {
         toast.error(res?.data?.Message);
         return;
@@ -86,56 +81,61 @@ export default function SignUpForm() {
         setTimeout(() => router.push("/board"), 2000);
       }
 
-    } catch (err) {
-      const validationErrors = err?.flatten().fieldErrors;
-      setFormErrors(validationErrors);
-      toast.error("Please complete all highlighted fields to proceed")
+    } catch (err: unknown) {
+      setIsLoading(false);
+      if (err !== undefined && err?.length > 0) {
+        const validationErrors = err?.flatten().fieldErrors;
+        setFormErrors(validationErrors);
+      }
+      toast.error("Something went wrong from our side. Please wait")
     }
   }
 
   return (
-    <Card className="bg-gray-100">
-      <CardHeader>
-        <CardTitle>Greetings User</CardTitle>
-        <CardDescription>
-          To start using retro board and save all details, fill all the below details. After saving, you&apos;ll be headed to the board page.
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-2">
-        <form>
-          <div className="space-y-1">
-            <Label htmlFor="fullname">Full Name <span className="required">*</span></Label>
-            <Input id="fullname" name="fullName" value={userData?.fullName} onChange={handleInputChange} />
-            {formErrors?.fullName && (
-              <p className="text-red-600 text-sm font-medium">
-                {formErrors?.fullName}
-              </p>
-            )}
-          </div>
-          <div className="space-y-1">
-            <Label htmlFor="username">Username <span className="required">*</span> </Label>
-            <Input id="username" type="text" name="userName" value={userData?.userName} onChange={handleInputChange} />
-            {formErrors?.userName && (
-              <p className="text-red-600 text-sm font-medium">
-                {formErrors?.userName}
-              </p>
-            )}
-          </div>
-          <div className="space-y-1">
-            <Label htmlFor="password">Password <span className="required">*</span></Label>
-            <Input id="password" type="password" name="password" value={userData?.password} onChange={handleInputChange} />
-            {formErrors?.password && (
-              <p className="text-red-600 text-sm font-medium">
-                {formErrors?.password}
-              </p>
-            )}
-          </div>
-        </form>
-      </CardContent>
-      <CardFooter>
-        <Button type="submit" onClick={(e) => { e.preventDefault(); handleFormSubmit() }}>Submit</Button>
-      </CardFooter>
-    </Card>
+    <>
+      {IsLoading && <Loader />}
+      <Card className="bg-gray-100">
+        <CardHeader>
+          <CardDescription>
+            Add your details here. After saving, you&apos;ll be headed to the board.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-2">
+          <form>
+            <div className="space-y-1">
+              <Label htmlFor="fullname">Full Name</Label>
+              <Input id="fullname" name="fullName" value={userData?.fullName} onChange={handleInputChange} />
+              {formErrors?.fullName && (
+                <p className="text-red-600 text-sm font-medium">
+                  {formErrors?.fullName}
+                </p>
+              )}
+            </div>
+            <div className="space-y-1">
+              <Label htmlFor="username">Username</Label>
+              <Input id="username" type="text" name="userName" value={userData?.userName} onChange={handleInputChange} />
+              {formErrors?.userName && (
+                <p className="text-red-600 text-sm font-medium">
+                  {formErrors?.userName}
+                </p>
+              )}
+            </div>
+            <div className="space-y-1">
+              <Label htmlFor="password">Password</Label>
+              <Input id="password" type="password" name="password" value={userData?.password} onChange={handleInputChange} />
+              {formErrors?.password && (
+                <p className="text-red-600 text-sm font-medium">
+                  {formErrors?.password}
+                </p>
+              )}
+            </div>
+          </form>
+        </CardContent>
+        <CardFooter>
+          <Button type="submit" onClick={(e) => handleFormSubmit(e)}>Submit</Button>
+        </CardFooter>
+      </Card>
+    </>
   );
 }
 

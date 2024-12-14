@@ -16,21 +16,25 @@ import { updateLoginStateData } from "@/State/Slices/LoginSlice";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import Cookies from 'js-cookie';
+import { Loader } from "../Loader/Loader";
 
 export default function GuestLogin() {
     const router = useRouter();
     const dispatch = useDispatch();
     const [guestName, setGuestName] = useState("");
+    const [IsLoading, setIsLoading] = useState(false);
 
     const HandleGuestLogin = async () => {
         try {
             if (guestName.length === 0)
                 return toast.error("Please enter your full name", { autoClose: 1500 });
 
+            setIsLoading(true)
             //call db to create new user
             const guestData = { isGuest: true, fullName: guestName, userName: "", password: "" }
             const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/guest-signup`, guestData);
 
+            setIsLoading(false)
             if (res?.data?.IsError) {
                 toast.error(res?.data?.Message, { autoClose: 1500 });
                 return;
@@ -54,12 +58,14 @@ export default function GuestLogin() {
                 //add board id if came from link
                 router.push("/board")
             }
-        } catch {
-            toast.error("Something went wrong");
+        } catch (error) {
+            setIsLoading(false)
+            toast.error("Something went wrong from our side. Please wait");
         }
     }
 
-    return (
+    return (<>
+        {IsLoading && <Loader />}
         <Card className="bg-gray-100">
             <CardHeader>
                 <CardTitle>Greeting Guest</CardTitle>
@@ -77,5 +83,6 @@ export default function GuestLogin() {
                 <Button onClick={(e) => { e.preventDefault(); HandleGuestLogin() }}>Save & Continue</Button>
             </CardFooter>
         </Card>
+    </>
     );
 }

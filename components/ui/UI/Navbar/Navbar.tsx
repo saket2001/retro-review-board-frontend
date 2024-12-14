@@ -16,13 +16,13 @@ const Navbar = () => {
             </h1>
 
             <div className="mx-3 flex items-center justify-evenly gap-x-5">
-                <Button variant={"link"} className="px-0">
+                <Button variant={"ghost"} className="px-1">
                     <Link href={"/"}>Home</Link>
                 </Button>
-                {loginStateData.isLoggedIn && <Button variant={"link"} className="px-0">
+                {loginStateData.isLoggedIn && <Button variant={"ghost"} className="px-1">
                     <Link href={"/board"}>My Boards</Link>
                 </Button>}
-                {loginStateData.isLoggedIn && <Button variant={"link"} className="px-0">
+                {loginStateData.isLoggedIn && <Button variant={"ghost"} className="px-1">
                     <Link href={"/board/create-board"}>Create Board</Link>
                 </Button>}
                 {loginStateData.isLoggedIn ? <LogoutBtn /> : <Button>

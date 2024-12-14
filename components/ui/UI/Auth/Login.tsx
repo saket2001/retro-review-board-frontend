@@ -17,6 +17,8 @@ import { useRouter } from "next/navigation";
 import { updateLoginStateData } from "@/State/Slices/LoginSlice";
 import axios from "axios";
 import Cookies from 'js-cookie';
+import { Loader } from "../Loader/Loader";
+import AxiosHelper from "@/Helpers/AxiosHelper";
 
 const userSchecma = z.object({
   userName: z
@@ -33,8 +35,10 @@ type IUserLogin = z.infer<typeof userSchecma>;
 export default function LoginForm() {
   const router = useRouter();
   const dispatch = useDispatch();
-  const [userData, setUserData] = useState<IUserLogin>({ userName: "", password: "", isGuest: false });
-  const [formErrors, setFormErrors] = useState<IUserLogin>();
+  const axiosHelper = new AxiosHelper();
+  const [userData, setUserData] = useState<IUserLogin>();
+  const [formErrors, setFormErrors] = useState({});
+  const [IsLoading, setIsLoading] = useState(false);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -52,6 +56,8 @@ export default function LoginForm() {
 
   const handleFormSubmit = async () => {
     try {
+      e.preventDefault();
+      setIsLoading(true);
       //validate form data
       const validatedData = userSchecma.parse(userData);
 
@@ -59,17 +65,18 @@ export default function LoginForm() {
         toast.error("Please fill all highlighted fields")
 
       setUserData(validatedData);
+      setFormErrors([]);
 
-      //login the user if not did already
-      const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/user-login`, validatedData)
+      const res = await axiosHelper.PostReq(`/auth/user-login`, validatedData)
 
-      if (res?.data?.IsError) {
-        toast.error(res?.data?.Message);
+      setIsLoading(false);
+      if (res?.IsError) {
+        toast.error(res?.Message);
         return;
       } else {
-        toast.success(res?.data?.Message);
+        toast.success(res?.Message);
 
-        const result = res?.data?.Result;
+        const result = res?.data;
         //handle state
         dispatch(updateLoginStateData({
           isLoggedIn: true,
@@ -86,45 +93,48 @@ export default function LoginForm() {
         setTimeout(() => router.push("/board"), 2000);
       }
 
-    } catch (err) {
+    } catch (err: unknown) {
       console.log(err);
-      const validationErrors = err.flatten().fieldErrors;
-      setFormErrors(validationErrors);
-      toast.error("Please complete all highlighted fields to proceed")
+      setIsLoading(false);
+      if (err !== undefined && err?.length > 0) {
+        const validationErrors = err?.flatten().fieldErrors;
+        setFormErrors(validationErrors);
+      }
+      toast.error("Something went wrong from our side. Please wait")
     }
   }
 
   return (
-    <Card className="bg-gray-100">
-      <CardHeader>
-        <CardTitle>Welcome Back, User!</CardTitle>
-        <CardDescription>
-          It&apos;s good to see you visit us back.
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-2">
-        <div className="space-y-1">
-          <Label htmlFor="username">Username <span className="required">*</span></Label>
-          <Input id="username" name="userName" value={userData?.userName} onChange={handleInputChange} />
-          {formErrors?.userName && (
-            <p className="text-red-600 text-sm font-medium">
-              {formErrors?.userName}
-            </p>
-          )}
-        </div>
-        <div className="space-y-1">
-          <Label htmlFor="Password">Password <span className="required">*</span></Label>
-          <Input type="password" id="Password" name="password" value={userData?.password} onChange={handleInputChange} />
-          {formErrors?.password && (
-            <p className="text-red-600 text-sm font-medium">
-              {formErrors?.password}
-            </p>
-          )}
-        </div>
-      </CardContent>
-      <CardFooter>
-        <Button type="submit" onClick={(e) => { e.preventDefault(); handleFormSubmit() }}>Submit</Button>
-      </CardFooter>
-    </Card>
+    <>
+      {IsLoading && <Loader />}
+      <Card className="bg-gray-100">
+        <CardHeader>
+          <CardTitle>Welcome Back, User!</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-2">
+          <div className="space-y-1">
+            <Label htmlFor="username">Username</Label>
+            <Input id="username" name="userName" value={userData?.userName} onChange={handleInputChange} />
+            {formErrors?.userName && (
+              <p className="text-red-600 text-sm font-medium">
+                {formErrors?.userName}
+              </p>
+            )}
+          </div>
+          <div className="space-y-1">
+            <Label htmlFor="Password">Password</Label>
+            <Input type="password" id="Password" name="password" value={userData?.password} onChange={handleInputChange} />
+            {formErrors?.password && (
+              <p className="text-red-600 text-sm font-medium">
+                {formErrors?.password}
+              </p>
+            )}
+          </div>
+        </CardContent>
+        <CardFooter>
+          <Button type="submit" onClick={(e) => handleFormSubmit(e)}>Submit</Button>
+        </CardFooter>
+      </Card>
+    </>
   );
 }
