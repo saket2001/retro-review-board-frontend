@@ -1,12 +1,12 @@
 "use client";
 import Link from "next/link";
-import { useSelector } from "react-redux";
 import ILoginState from "@/Interfaces/ILoginState";
 import { LogoutBtn } from "../Auth/LogoutBtn";
 import { Button } from "../../MyButton";
+import { useAppSelector } from "@/State/stateExports";
 
 const Navbar = () => {
-    const loginStateData: ILoginState = useSelector((state) => state.loginState);
+    const loginStateData: ILoginState = useAppSelector((state) => state.loginState);
 
     return (
         <nav className="lg:my-3 lg:mx-3 lg:rounded-full w-100 px-2 py-2 bg-white lg:px-4 flex gap-x-2 justify-between items-center shadow">

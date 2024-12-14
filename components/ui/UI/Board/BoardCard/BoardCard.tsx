@@ -3,7 +3,6 @@ import IBoardData from "@/Interfaces/IBoardData";
 import { FunctionComponent, useState } from "react";
 import Link from "next/link";
 import { toast } from "react-toastify";
-import { useDispatch } from "react-redux";
 import { deleteBoardDataById } from "@/State/Slices/BoardSlice";
 import AxiosHelper from "@/Helpers/AxiosHelper";
 import ILoginState from "@/Interfaces/ILoginState";
@@ -11,6 +10,7 @@ import { Loader } from "../../Loader/Loader";
 import ShareButton from "../../ShareButton";
 import Heading from "../../HeadingComponent/Heading";
 import { Button } from "@/components/ui/MyButton";
+import { useAppDispatch } from "@/State/stateExports";
 
 interface BoardCardProps {
     boardData: IBoardData,
@@ -19,7 +19,7 @@ interface BoardCardProps {
 }
 
 const BoardCard: FunctionComponent<BoardCardProps> = (props) => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const axiosHelper = new AxiosHelper();
     const [isLoading, setIsLoading] = useState(false);
 

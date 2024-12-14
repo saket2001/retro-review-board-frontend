@@ -1,6 +1,6 @@
 "use client";
 
-import { z } from "zod";
+import { z, ZodError } from "zod";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -14,12 +14,12 @@ import { Button } from "@/components/ui/MyButton";
 import { FunctionComponent, MouseEvent, useState } from "react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
-import { useAppDispatch, useAppSelector } from "../../../../../State/stateExports";
 import { addBoardDataToBoardDataList, updateBoardDataById } from "@/State/Slices/BoardSlice";
 import IBoardData from "@/Interfaces/IBoardData";
 import ILoginState from "@/Interfaces/ILoginState";
 import AxiosHelper from "@/Helpers/AxiosHelper";
 import { Loader } from "../../Loader/Loader";
+import { useAppDispatch, useAppSelector } from "@/State/stateExports";
 
 const BoardItemSchecma = z.object({
     _id: z.string(),
@@ -141,8 +141,8 @@ const BoardSettings: FunctionComponent<BoardSettingsProps> = (props) => {
         } catch (err: unknown) {
             console.log(err);
             setIsLoading(false);
-            if (err !== undefined && err?.length > 0) {
-                const validationErrors = err?.flatten().fieldErrors;
+            if (err instanceof ZodError) {
+                const validationErrors = err.flatten().fieldErrors;
                 setBoardErrors(validationErrors);
             }
         }

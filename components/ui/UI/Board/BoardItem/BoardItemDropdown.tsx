@@ -1,5 +1,4 @@
 import { Button } from "../../../MyButton";
-import { useDispatch } from "react-redux";
 import { FunctionComponent } from "react";
 import { toast } from "react-toastify";
 import { deleteBoardDataCommentById } from "@/State/Slices/BoardSlice";
@@ -10,6 +9,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { useAppDispatch } from "@/State/stateExports";
 
 
 interface BoardItemDropdownProps {
@@ -21,7 +21,7 @@ interface BoardItemDropdownProps {
 
 
 const BoardItemDropdown: FunctionComponent<BoardItemDropdownProps> = (props) => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
     const handleCommentDelete = () => {
         try {

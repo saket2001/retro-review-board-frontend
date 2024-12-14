@@ -1,5 +1,4 @@
 import { Card, CardHeader } from "@/components/ui/card";
-import { useDispatch, useSelector } from "react-redux";
 import ILoginState from "@/Interfaces/ILoginState";
 import { FunctionComponent, useState } from "react";
 import { toast } from "react-toastify";
@@ -10,6 +9,7 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import TurndownService from 'turndown';
 import { Button } from "@/components/ui/MyButton";
+import { useAppDispatch, useAppSelector } from "@/State/stateExports";
 
 
 interface BoardItemInputProps {
@@ -31,10 +31,10 @@ const modules = {
 
 
 const BoardItemInput: FunctionComponent<BoardItemInputProps> = (props) => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const turndownService = new TurndownService();
     const [userComment, setUserComment] = useState(props?.boardItemData?.comment ?? "");
-    const loginData: ILoginState = useSelector((state) => state.loginState);
+    const loginData: ILoginState = useAppSelector((state) => state.loginState);
     // const boardData: IBoardData = useAppSelector((state) => state.boardState);
 
     const handleSave = (e: MouseEvent<HTMLButtonElement, MouseEvent>) => {

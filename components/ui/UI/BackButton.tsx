@@ -3,7 +3,7 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "../MyButton";
 
-export const BackButton = (props: { text: string }) => {
+export const BackButton = (props: { text?: string }) => {
   const router = useRouter();
   const handleGoBack = () => {
     router.back()
