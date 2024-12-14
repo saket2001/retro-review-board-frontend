@@ -17,6 +17,7 @@ interface BoardItem {
 
 const BoardItem = (props: BoardItem) => {
     const [editComment, setEditComment] = useState(false);
+    console.log(props.data);
 
     const handleEditCommentFn = (data: boolean) => {
         try {

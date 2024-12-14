@@ -1,10 +1,11 @@
 import IBoardItem from "./IBoardItem";
 
 export default interface IBoardData {
-  Id: string;
+  _id: string;
   boardName: string;
   ownerUserId: string;
   boardCategories: string;
+  deleteBoardDataAfterDays: string;
   userCommentsMasked: boolean;
   isBoardLocked: boolean;
   createdAt: string;

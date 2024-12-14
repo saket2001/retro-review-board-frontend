@@ -12,10 +12,11 @@ interface BoardListProps {
   dataList: IBoardItem[];
   loggedInUserId: string;
   maskUserComments: boolean;
+  isBoardLocked: boolean;
 }
 
 const BoardList: FunctionComponent<BoardListProps> = (props) => {
-  const hasBoardItems = props.dataList.length > 0 ? true : false;
+  const hasBoardItems = props.dataList?.length > 0 ? true : false;
 
   return (
     <section className={`px-3 py-2 ${props.extraStyles}`}>
@@ -23,7 +24,7 @@ const BoardList: FunctionComponent<BoardListProps> = (props) => {
 
       <div className="flex flex-col gap-y-1 p-2">
         {hasBoardItems &&
-          props?.dataList.map((item: IBoardItem) =>
+          props?.dataList?.map((item: IBoardItem) =>
             <BoardItem key={item.Id}
               BoardId={props?.boardId}
               data={item}
@@ -32,7 +33,7 @@ const BoardList: FunctionComponent<BoardListProps> = (props) => {
               loggedInUserId={props.loggedInUserId} />
           )}
 
-        <BoardItemInput handleEditCommentFn={null} boardId={props.boardId} boardItemCategory={props?.listHeading} IsItemNew={true} boardItemData={null} />
+        {!props.isBoardLocked && <BoardItemInput handleEditCommentFn={null} boardId={props.boardId} boardItemCategory={props?.listHeading} IsItemNew={true} boardItemData={null} />}
       </div>
     </section>
   );
