@@ -1,6 +1,6 @@
 import React from 'react'
-import { useDispatch, useSelector } from 'react-redux';
-import { Button } from '../../button';
+import { useAppDispatch, useAppSelector } from '../../../../State/stateExports';
+import { Button } from '../../MyButton';
 import Link from 'next/link';
 import { toast } from 'react-toastify';
 import { updateLoginStateData } from '@/State/Slices/LoginSlice';
@@ -11,9 +11,9 @@ import { useRouter } from "next/navigation";
 import ILoginState from '@/Interfaces/ILoginState';
 
 export const LogoutBtn = () => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const router = useRouter();
-    const loginStateData: ILoginState = useSelector((state) => state.loginState);
+    const loginStateData: ILoginState = useAppSelector((state) => state.loginState);
 
     const handleLogOut = async () => {
         try {

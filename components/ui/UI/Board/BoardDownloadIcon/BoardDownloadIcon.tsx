@@ -1,6 +1,7 @@
 import React from 'react'
+import React from 'react'
 import * as XLSX from 'xlsx';
-import { Button } from '@/Components/ui/button'
+import { Button } from '@/components/ui/MyButton'
 import IBoardData from '@/Interfaces/IBoardData';
 import { toast } from 'react-toastify';
 import IBoardItem from '@/Interfaces/IBoardItem';
@@ -8,7 +9,7 @@ import { Tooltip, TooltipProvider, TooltipContent, TooltipTrigger } from '@/comp
 import { marked } from 'marked';
 
 interface downloadIconProps {
-    boardData: IBoardData,
+    boardData: IBoardData | undefined,
     excelFileName: string,
 }
 

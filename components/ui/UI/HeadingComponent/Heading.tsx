@@ -9,6 +9,9 @@ interface HeadingProps {
 
 const Heading: FunctionComponent<HeadingProps> = ({ variant, title, extraStyles }) => {
 
+  if (title?.length === 0)
+    return;
+
   switch (variant) {
     case "h1":
       return <h1 className={`font-bold text-lg lg:text-xl text-gray-800 capitalize ${extraStyles}`}>{title}</h1>;
@@ -23,4 +26,4 @@ const Heading: FunctionComponent<HeadingProps> = ({ variant, title, extraStyles 
 
 };
 
-export { Heading };
+export default Heading;

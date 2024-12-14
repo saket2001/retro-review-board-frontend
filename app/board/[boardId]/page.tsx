@@ -1,6 +1,5 @@
 "use client";
 import BoardList from "../../../components/ui/UI/Board/BoardList/BoardList";
-import { Heading } from "../../../Components/ui/UI/Heading/Heading";
 import IBoardData from "../../../Interfaces/IBoardData";
 import ILoginState from "../../../Interfaces/ILoginState";
 import { BoardDownloadIcon } from "../../../components/ui/UI/Board/BoardDownloadIcon/BoardDownloadIcon";
@@ -17,6 +16,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Loader } from "@/components/ui/UI/Loader/Loader";
 import { addBoardDataToBoardDataList } from "@/State/Slices/BoardSlice";
 import { Button } from "@/components/ui/button";
+import Heading from "@/components/ui/UI/HeadingComponent/Heading";
 
 
 export default function BoardDetails({

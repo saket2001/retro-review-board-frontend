@@ -7,8 +7,8 @@ import BoardItemInput from "./BoardItemInput";
 import ReactMarkdown from 'react-markdown';
 
 interface BoardItem {
-    BoardId: string,
-    data?: IBoardItem,
+    BoardId: string | undefined,
+    data?: IBoardItem | undefined,
     loggedInUserId: string,
     boardItemCategory: string,
     maskUserComments: boolean,

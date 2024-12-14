@@ -13,7 +13,7 @@ import TurndownService from 'turndown';
 
 
 interface BoardItemInputProps {
-    boardId: string,
+    boardId: string | undefined,
     boardItemCategory: string,
     IsItemNew: boolean,
     boardItemData: IBoardItem | null,
@@ -31,11 +31,11 @@ const modules = {
 
 
 const BoardItemInput: FunctionComponent<BoardItemInputProps> = (props) => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const turndownService = new TurndownService();
     const [userComment, setUserComment] = useState(props?.boardItemData?.comment ?? "");
-    const loginData: ILoginState = useSelector((state) => state.loginState);
-    // const boardData: IBoardData = useSelector((state) => state.boardState);
+    const loginData: ILoginState = useAppSelector((state) => state.loginState);
+    // const boardData: IBoardData = useAppSelector((state) => state.boardState);
 
     const handleSave = (e: MouseEvent<HTMLButtonElement, MouseEvent>) => {
         try {
