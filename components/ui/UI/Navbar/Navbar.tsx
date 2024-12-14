@@ -1,9 +1,9 @@
 "use client";
-import { Button } from "../../button";
 import Link from "next/link";
 import { useSelector } from "react-redux";
 import ILoginState from "@/Interfaces/ILoginState";
 import { LogoutBtn } from "../Auth/LogoutBtn";
+import { Button } from "../../MyButton";
 
 const Navbar = () => {
     const loginStateData: ILoginState = useSelector((state) => state.loginState);

@@ -15,8 +15,8 @@ import IBoardDataList from "@/Interfaces/IBoardDataList";
 import { useQuery } from "@tanstack/react-query";
 import { Loader } from "@/components/ui/UI/Loader/Loader";
 import { addBoardDataToBoardDataList } from "@/State/Slices/BoardSlice";
-import { Button } from "@/components/ui/button";
 import Heading from "@/components/ui/UI/HeadingComponent/Heading";
+import { Button } from "@/components/ui/MyButton";
 
 
 export default function BoardDetails({

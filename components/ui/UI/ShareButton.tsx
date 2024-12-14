@@ -1,6 +1,6 @@
 import React from 'react'
-import { Button } from '../button';
 import { toast } from 'react-toastify';
+import { Button } from '../MyButton';
 
 const ShareButton = (props: { boardId: string }) => {
     const handleBoardShare = () => {
