@@ -4,18 +4,18 @@ import ILoginState from "../../Interfaces/ILoginState";
 import BoardCard from "../../components/ui/UI/Board/BoardCard/BoardCard";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { useQuery } from '@tanstack/react-query';
 import { createNewBoardDataList } from "@/State/Slices/BoardSlice";
 import { Loader } from "@/components/ui/UI/Loader/Loader";
 import { toast } from "react-toastify";
 import Heading from "@/components/ui/UI/HeadingComponent/Heading";
+import { useAppDispatch, useAppSelector } from "@/State/stateExports";
 
 export default function BoardHome() {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const router = useRouter();
-    const loginData: ILoginState = useSelector((state) => state.loginState);
-    const boardDataList: IBoardDataList[] = useSelector((state) => state.boardState);
+    const loginData: ILoginState = useAppSelector((state) => state.loginState);
+    const boardDataList: IBoardDataList = useAppSelector((state) => state.boardState);
     const [boardDataListState, setBoardDataList] = useState(boardDataList);
 
     const { data, error, isLoading, refetch } = useQuery({

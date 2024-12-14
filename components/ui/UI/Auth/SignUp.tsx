@@ -12,12 +12,12 @@ import { z } from "zod";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import IUser from "@/Interfaces/IUser";
-import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 import { updateLoginStateData } from "@/State/Slices/LoginSlice";
 import axios from "axios";
 import Cookies from 'js-cookie';
 import { Loader } from "../Loader/Loader";
+import { useAppDispatch } from "@/State/stateExports";
 
 const NewUserSchecma = z.object({
   fullName: z.string().min(3, "Your Full Name must contain atleast 3 characters long!")
@@ -35,7 +35,7 @@ const NewUserSchecma = z.object({
 
 export default function SignUpForm() {
   const router = useRouter();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const [userData, setUserData] = useState<IUser>();
   const [formErrors, setFormErrors] = useState({});
   const [IsLoading, setIsLoading] = useState(false);

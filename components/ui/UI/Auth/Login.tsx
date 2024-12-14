@@ -11,12 +11,12 @@ import { Button } from "@/components/ui/MyButton";
 import { z } from "zod";
 import { useState } from "react";
 import { toast } from "react-toastify";
-import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 import { updateLoginStateData } from "@/State/Slices/LoginSlice";
 import Cookies from 'js-cookie';
 import { Loader } from "../Loader/Loader";
 import AxiosHelper from "@/Helpers/AxiosHelper";
+import { useAppDispatch } from "@/State/stateExports";
 
 const userSchecma = z.object({
   userName: z
@@ -32,9 +32,9 @@ type IUserLogin = z.infer<typeof userSchecma>;
 
 export default function LoginForm() {
   const router = useRouter();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const axiosHelper = new AxiosHelper();
-  const [userData, setUserData] = useState<IUserLogin>();
+  const [userData, setUserData] = useState<IUserLogin>({ userName: "", password: "", isGuest: false });
   const [formErrors, setFormErrors] = useState({});
   const [IsLoading, setIsLoading] = useState(false);
 
@@ -52,7 +52,7 @@ export default function LoginForm() {
     });
   };
 
-  const handleFormSubmit = async () => {
+  const handleFormSubmit = async (e) => {
     try {
       e.preventDefault();
       setIsLoading(true);

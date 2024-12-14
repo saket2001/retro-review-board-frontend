@@ -1,6 +1,7 @@
 import {
     Card,
     CardContent,
+    CardDescription,
     CardFooter,
     CardHeader,
     CardTitle
@@ -9,17 +10,17 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/MyButton";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { updateLoginStateData } from "@/State/Slices/LoginSlice";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import Cookies from 'js-cookie';
 import { Loader } from "../Loader/Loader";
+import { useAppDispatch } from "@/State/stateExports";
 
 export default function GuestLogin() {
     const router = useRouter();
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const [guestName, setGuestName] = useState("");
     const [IsLoading, setIsLoading] = useState(false);
 
@@ -69,8 +70,10 @@ export default function GuestLogin() {
         <Card className="bg-gray-100">
             <CardHeader>
                 <CardTitle>Greeting Guest</CardTitle>
-                Add your Full Name here. Click save when you&apos;re
-                done to head to the board
+                <CardDescription>
+                    Add your Full Name here. Click save when you&apos;re
+                    done to head to the board
+                </CardDescription>
             </CardHeader>
             <CardContent className="space-y-2">
                 <div className="space-y-1">

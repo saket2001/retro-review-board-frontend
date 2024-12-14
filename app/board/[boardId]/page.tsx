@@ -6,7 +6,6 @@ import { BoardDownloadIcon } from "../../../components/ui/UI/Board/BoardDownload
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { BackButton } from "@/components/ui/UI/BackButton";
 import { Card, CardHeader } from "@/components/ui/card";
@@ -17,6 +16,7 @@ import { Loader } from "@/components/ui/UI/Loader/Loader";
 import { addBoardDataToBoardDataList } from "@/State/Slices/BoardSlice";
 import Heading from "@/components/ui/UI/HeadingComponent/Heading";
 import { Button } from "@/components/ui/MyButton";
+import { useAppDispatch, useAppSelector } from "@/State/stateExports";
 
 
 export default function BoardDetails({
@@ -25,11 +25,11 @@ export default function BoardDetails({
     params: { boardId: string };
 }) {
     const router = useRouter();
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const [boardDataState, setBoardDataState] = useState<IBoardData>();
     const [retroBoardTitles, setRetroBoardTitles] = useState<string[]>([]);
-    const loginData: ILoginState = useSelector((state) => state.loginState);
-    const boardDataList: IBoardDataList = useSelector((state) => state.boardState);
+    const loginData: ILoginState = useAppSelector((state) => state.loginState);
+    const boardDataList: IBoardDataList = useAppSelector((state) => state.boardState);
     const [IsBoardLocked, setIsBoardLocked] = useState(false);
     const [showBoardLockAlert, setShowBoardLockAlert] = useState(true);
 
