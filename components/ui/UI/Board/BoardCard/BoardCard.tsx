@@ -1,8 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import IBoardData from "@/Interfaces/IBoardData";
 import { FunctionComponent, useState } from "react";
-import { Heading } from "../../Heading/Heading";
-import { Button } from "@/Components/ui/button";
 import Link from "next/link";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
@@ -11,6 +9,8 @@ import AxiosHelper from "@/Helpers/AxiosHelper";
 import ILoginState from "@/Interfaces/ILoginState";
 import { Loader } from "../../Loader/Loader";
 import ShareButton from "../../ShareButton";
+import Heading from "../../HeadingComponent/Heading";
+import { Button } from "@/components/ui/MyButton";
 
 interface BoardCardProps {
     boardData: IBoardData,

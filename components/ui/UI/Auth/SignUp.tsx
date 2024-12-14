@@ -3,8 +3,7 @@ import {
   CardContent,
   CardFooter,
   CardHeader,
-  CardDescription,
-  CardTitle
+  CardDescription
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -32,7 +31,7 @@ const NewUserSchecma = z.object({
   isGuest: z.boolean().default(false)
 });
 
-type INewUserLogin = z.infer<typeof NewUserSchecma>;
+// type INewUserLogin = z.infer<typeof NewUserSchecma>;
 
 export default function SignUpForm() {
   const router = useRouter();

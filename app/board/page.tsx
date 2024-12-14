@@ -1,5 +1,4 @@
 "use client";
-import { Heading } from "../../Components/ui/UI/Heading/Heading";
 import IBoardDataList from "../../Interfaces/IBoardDataList";
 import ILoginState from "../../Interfaces/ILoginState";
 import BoardCard from "../../components/ui/UI/Board/BoardCard/BoardCard";
@@ -10,7 +9,7 @@ import { useQuery } from '@tanstack/react-query';
 import { createNewBoardDataList } from "@/State/Slices/BoardSlice";
 import { Loader } from "@/components/ui/UI/Loader/Loader";
 import { toast } from "react-toastify";
-import { useAppSelector } from "../../State/stateExports";
+import Heading from "@/components/ui/UI/HeadingComponent/Heading";
 
 export default function BoardHome() {
     const dispatch = useDispatch();
@@ -34,7 +33,6 @@ export default function BoardHome() {
         setBoardDataList(data?.Result);
     }, [data, dispatch])
 
-        (boardDataListState);
 
     if (error) {
         toast.error(error)
