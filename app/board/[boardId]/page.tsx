@@ -1,7 +1,7 @@
 "use client";
 import BoardList from "../../../components/ui/UI/Board/BoardList/BoardList";
-import { Heading } from "../../../Components/ui/UI/Heading/Heading";
-import { Button } from "../../../Components/ui/button";
+import Heading from "../../../components/ui/UI/HeadingComponent/Heading";
+import { Button } from "../../../components/ui/MyButton";
 import IBoardData from "../../../Interfaces/IBoardData";
 import ILoginState from "../../../Interfaces/ILoginState";
 import { BoardDownloadIcon } from "../../../components/ui/UI/Board/BoardDownloadIcon/BoardDownloadIcon";
@@ -9,6 +9,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useAppSelector } from "../../../State/stateExports";
 import { toast } from "react-toastify";
 import { BackButton } from "@/components/ui/UI/BackButton";
 import { Card, CardHeader } from "@/components/ui/card";
@@ -56,10 +57,10 @@ export default function BoardDetails({
 
     const canUpdateBoardSetting: boolean = loginData?.loggedInUserId === boardDataState?.ownerUserId;
 
-    // if (!loginData.isLoggedIn) {
-    //     router.push("/auth");
-    //     return;
-    // }
+    if (!loginData.isLoggedIn) {
+         router.push("/auth");
+         return;
+    }
 
     if (boardDataState?.boardCategories && retroBoardTitles.length === 0) {
         setRetroBoardTitles(boardDataState?.boardCategories?.split(","));
@@ -91,7 +92,6 @@ export default function BoardDetails({
                             }
                         </span>
                     </div>
-                    <div className="flex items-center gap-x-4">
                         <div className="flex items-center gap-x-1">
                             <BackButton />
                             {/* setting btn icon */}
@@ -106,8 +106,6 @@ export default function BoardDetails({
                             {/* Download btn icon */}
                             <BoardDownloadIcon boardData={boardDataState} excelFileName={`${boardDataState?.boardName}_export_${new Date().toISOString()}_.xlsx`} />
                         </div>
-
-                    </div>
                 </section>
                 {(boardDataState == undefined || boardDataState?.boardName?.length === 0) && (
                     <div className="w-full h-full flex justify-center items-center my-5 py-4">

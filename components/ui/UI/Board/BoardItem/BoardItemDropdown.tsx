@@ -1,4 +1,4 @@
-import { Button } from "../../../button";
+import { Button } from "../../../MyButton";
 import { useDispatch } from "react-redux";
 import { FunctionComponent } from "react";
 import { toast } from "react-toastify";
@@ -16,7 +16,7 @@ interface BoardItemDropdownProps {
     BoardId: string,
     commentId: string | undefined,
     loggedInUserId: string,
-    handleEditCommentFn: any,
+    handleEditCommentFn: unknown,
 }
 
 

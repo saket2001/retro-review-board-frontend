@@ -1,13 +1,14 @@
 import {
   Card,
   CardContent,
+  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Button } from "@/Components/ui/button";
+import { Button } from "@/components/ui/MyButton";
 import { z } from "zod";
 import { useState } from "react";
 import { toast } from "react-toastify";
@@ -24,7 +25,7 @@ const userSchecma = z.object({
     .string()
     .min(3, "Your username must contain atleast 3 characters long!")
     .max(50, "Your Full Name must contain atmost 50 characters long!"),
-  password: z.string().min(1, "Your password must contain atleast 1 characters long!")
+  password: z.string().min(8, "Your password must contain atleast 8 characters!")
     .max(30, "Your password must contain atmost 30 characters long!"),
   isGuest: z.boolean().default(false)
 });
@@ -39,17 +40,29 @@ export default function LoginForm() {
   const [formErrors, setFormErrors] = useState({});
   const [IsLoading, setIsLoading] = useState(false);
 
-  const handleInputChange = (e: MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    const { name, value } = e.target;
-    setUserData((prev) => ({ ...prev, [name]: value }));
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+
+    setUserData((prev) => {
+      if (prev) {
+        return {
+          ...prev,
+          [name]: value,
+        };
+      }
+      return undefined;
+    });
   };
 
-  const handleFormSubmit = async (e: MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const handleFormSubmit = async () => {
     try {
       e.preventDefault();
       setIsLoading(true);
       //validate form data
       const validatedData = userSchecma.parse(userData);
+
+      if (validatedData == undefined || Object.keys(validatedData).length == 0)
+        toast.error("Please fill all highlighted fields")
 
       setUserData(validatedData);
       setFormErrors([]);
@@ -81,6 +94,7 @@ export default function LoginForm() {
       }
 
     } catch (err: unknown) {
+      console.log(err);
       setIsLoading(false);
       if (err !== undefined && err?.length > 0) {
         const validationErrors = err?.flatten().fieldErrors;

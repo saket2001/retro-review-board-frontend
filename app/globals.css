@@ -90,3 +90,8 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+.required {
+  color: red;  /* Make the asterisk red */
+  font-weight: bold;
+}

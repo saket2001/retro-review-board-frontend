@@ -8,8 +8,8 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Button } from "@/Components/ui/button";
-import { MouseEvent, useState } from "react";
+import { Button } from "@/components/ui/MyButton";
+import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { updateLoginStateData } from "@/State/Slices/LoginSlice";
@@ -24,10 +24,8 @@ export default function GuestLogin() {
     const [guestName, setGuestName] = useState("");
     const [IsLoading, setIsLoading] = useState(false);
 
-    const HandleGuestLogin = async (e: MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    const HandleGuestLogin = async () => {
         try {
-
-            e.preventDefault();
             if (guestName.length === 0)
                 return toast.error("Please enter your full name", { autoClose: 1500 });
 
@@ -72,18 +70,17 @@ export default function GuestLogin() {
             <CardHeader>
                 <CardTitle>Greeting Guest</CardTitle>
                 <CardDescription>
-                    Add your Full Name here. Click save when you're
-                    done to head to the board
+                    Add your Full Name below and click save to head to the board page
                 </CardDescription>
             </CardHeader>
             <CardContent className="space-y-2">
                 <div className="space-y-1">
-                    <Label htmlFor="fullname">Full Name</Label>
+                    <Label htmlFor="fullname">Full Name <span className="required">*</span></Label>
                     <Input className="border border-gray-500" onChange={(e) => setGuestName(e.target.value)} id="fullname" />
                 </div>
             </CardContent>
             <CardFooter>
-                <Button onClick={(e) => { HandleGuestLogin(e) }}>Save & Continue</Button>
+                <Button onClick={(e) => { e.preventDefault(); HandleGuestLogin() }}>Save & Continue</Button>
             </CardFooter>
         </Card>
     </>

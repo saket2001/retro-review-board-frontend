@@ -3,11 +3,12 @@ import {
   CardContent,
   CardFooter,
   CardHeader,
-  CardDescription
+  CardDescription,
+  CardTitle
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Button } from "@/Components/ui/button";
+import { Button } from "@/components/ui/MyButton";
 import { z } from "zod";
 import { useState } from "react";
 import { toast } from "react-toastify";
@@ -26,11 +27,12 @@ const NewUserSchecma = z.object({
     .string()
     .min(3, "Your username must contain atleast 3 characters long!")
     .max(50, "Your Full Name must contain atmost 50 characters long!"),
-  password: z.string().min(1, "Your password must contain atleast 1 characters long!")
+  password: z.string().min(8, "Your password must contain atleast 8 characters")
     .max(30, "Your password must contain atmost 30 characters long!"),
   isGuest: z.boolean().default(false)
 });
 
+type INewUserLogin = z.infer<typeof NewUserSchecma>;
 
 export default function SignUpForm() {
   const router = useRouter();
@@ -44,17 +46,15 @@ export default function SignUpForm() {
     setUserData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleFormSubmit = async (e: MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const handleFormSubmit = async () => {
     try {
       e.preventDefault();
-
       setIsLoading(true)
       //validate form data
       const validatedData = NewUserSchecma.parse(userData);
 
       setUserData(validatedData);
       setFormErrors([]);
-
       const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/user-signup`, validatedData)
 
       setIsLoading(false)

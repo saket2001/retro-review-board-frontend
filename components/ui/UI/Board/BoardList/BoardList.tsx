@@ -2,14 +2,14 @@
 import { FunctionComponent } from "react";
 import BoardItem from "../BoardItem/BoardItem";
 import IBoardItem from "@/Interfaces/IBoardItem";
-import { Heading } from "../../Heading/Heading";
+import Heading from "../../HeadingComponent/Heading";
 import BoardItemInput from "../BoardItem/BoardItemInput";
 
 interface BoardListProps {
-  boardId: string,
+  boardId: string | undefined,
   listHeading: string;
   extraStyles: string;
-  dataList: IBoardItem[];
+  dataList: IBoardItem[] | undefined;
   loggedInUserId: string;
   maskUserComments: boolean;
   isBoardLocked: boolean;
@@ -25,6 +25,7 @@ const BoardList: FunctionComponent<BoardListProps> = (props) => {
       <div className="flex flex-col gap-y-1 p-2">
         {hasBoardItems &&
           props?.dataList?.map((item: IBoardItem) =>
+
             <BoardItem key={item.Id}
               BoardId={props?.boardId}
               data={item}

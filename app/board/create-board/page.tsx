@@ -2,7 +2,7 @@
 import { BackButton } from "@/components/ui/UI/BackButton";
 import { Card, CardContent, CardDescription, CardHeader } from "../../../components/ui/card";
 import BoardSettings from "../../../components/ui/UI/Board/BoardSetting/BoardSetting";
-import { Heading } from "../../../Components/ui/UI/Heading/Heading";
+import Heading from "../../../components/ui/UI/HeadingComponent/Heading";
 
 export default function CreateBoardPage() {
 
