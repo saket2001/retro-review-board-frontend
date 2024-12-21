@@ -85,7 +85,12 @@ export default function LoginForm() {
         }))
 
         //storing refresh tokken
-        Cookies.set('login-refresh-token', result?.refreshToken, { expires: 1, path: '/' });
+        Cookies.set('refresh-token', result?.refreshToken, { secure: true, expires: 1, path: '/' });
+        Cookies.set('access-token', result?.accessToken, { secure: true, expires: 1, path: '/' });
+
+        //storing other details too
+        Cookies.set("loggedInUserId", result?.user?.loggedInUserId);
+        Cookies.set("loggedInUserName", result?.user?.loggedInUserName);
 
         setTimeout(() => router.push("/board"), 2000);
       }

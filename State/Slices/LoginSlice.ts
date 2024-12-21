@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import ILoginState from "@/Interfaces/ILoginState";
+import Cookies from "js-cookie";
 
 const initialLoginSliceState: ILoginState = {
   isLoggedIn: false,
@@ -28,10 +29,22 @@ export const loginSlice = createSlice({
       state.loginTokenExpiresIn = action.payload?.loginTokenExpiresIn;
       state.isGuestUser = action.payload?.isGuestUser;
     },
+    logoutUser: (state) => {
+      Cookies.remove("access-token");
+      Cookies.remove("refresh-token");
+      Cookies.remove("loggedInUserId");
+      Cookies.remove("loggedInUserName");
+      state.isLoggedIn = false;
+      state.loginToken = "";
+      state.loggedInUserId = "";
+      state.loggedInUserName = "";
+      state.loginTokenExpiresIn = "";
+      state.isGuestUser = true;
+    },
   },
 });
 
-export const { toggleLogin, toggleLoginTo, updateLoginStateData } =
+export const { toggleLogin, toggleLoginTo, updateLoginStateData, logoutUser } =
   loginSlice.actions;
 
 export default loginSlice.reducer;

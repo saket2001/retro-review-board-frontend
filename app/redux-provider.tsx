@@ -9,10 +9,12 @@ interface Props {
 }
 
 export const ReduxProvider: FunctionComponent<Props> = ({ children }) => {
+
   return <Provider store={store}>
     {children}
     <ToastContainer
       position="bottom-right"
+      hideProgressBar={true}
       newestOnTop={true}
       closeOnClick
       autoClose={1500}

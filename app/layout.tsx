@@ -2,10 +2,9 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import "react-toastify/dist/ReactToastify.css";
-import Navbar from "../components/ui/UI/Navbar/Navbar";
 import { ReduxProvider } from "./redux-provider";
 import QueryProvider from "./QueryClientProvider";
-
+import { ResponsiveNavbar } from "@/components/ui/UI/Navbar/ResponsiveNavbar";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -28,6 +27,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
   return (
     <html lang="en">
       <body
@@ -35,7 +35,7 @@ export default function RootLayout({
       >
         <ReduxProvider>
           <QueryProvider>
-            <Navbar />
+            <ResponsiveNavbar />
             <section>{children}</section>
           </QueryProvider>
         </ReduxProvider>
