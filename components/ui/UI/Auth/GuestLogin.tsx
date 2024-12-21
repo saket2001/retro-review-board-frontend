@@ -36,11 +36,11 @@ export default function GuestLogin() {
 
             setIsLoading(false)
             if (res?.data?.IsError) {
-                toast.error(res?.data?.Message, { autoClose: 1500 });
+                toast.error(res?.data?.Message);
                 return;
             } else {
                 const resultData = res?.data?.Result;
-                toast.success(res?.data?.Message, { autoClose: 1500 });
+                toast.success(res?.data?.Message);
 
                 //handle state management
                 dispatch(updateLoginStateData({
@@ -53,16 +53,18 @@ export default function GuestLogin() {
                 }))
 
                 //storing refresh tokken
-                Cookies.set('refresh-token', result?.refreshToken, { secure: true, expires: 1, path: '/' });
-                Cookies.set('access-token', result?.accessToken, { secure: true, expires: 1, path: '/' });
+                Cookies.set('refresh-token', resultData?.refreshToken, { secure: true, expires: 1, path: '/' });
+                Cookies.set('access-token', resultData?.accessToken, { secure: true, expires: 1, path: '/' });
 
                 //storing other details too
-                Cookies.set("loggedInUserId", result?.user?.loggedInUserId);
-                Cookies.set("loggedInUserName", result?.user?.loggedInUserName);
+                Cookies.set("loggedInUserId", resultData?.user?.loggedInUserId);
+                Cookies.set("loggedInUserName", resultData?.user?.loggedInUserName);
 
-                //TODO Add logic to go from came url
-                //add board id if came from link
-                router.push("/board")
+                const previousUrl = document && document?.referrer;
+                if (previousUrl)
+                    router.push(previousUrl);
+                else
+                    router.push("/board")
             }
         } catch {
             setIsLoading(false)
