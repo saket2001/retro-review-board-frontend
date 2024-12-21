@@ -2,10 +2,9 @@ import React from 'react'
 import { Button } from '../../MyButton';
 import Link from 'next/link';
 import { toast } from 'react-toastify';
-import { updateLoginStateData } from '@/State/Slices/LoginSlice';
+import { logoutUser } from '@/State/Slices/LoginSlice';
 import { clearBoardData } from '@/State/Slices/BoardSlice';
 import axios from 'axios';
-import Cookies from 'js-cookie';
 import { useRouter } from "next/navigation";
 import ILoginState from '@/Interfaces/ILoginState';
 import { useAppDispatch, useAppSelector } from '@/State/stateExports';
@@ -18,8 +17,6 @@ export const LogoutBtn = () => {
     const handleLogOut = async () => {
         try {
 
-            Cookies.remove("login-refresh-token");
-
             //clear db tokens
             const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/logout`, { isGuestUser: loginStateData?.isGuestUser, userId: loginStateData?.loggedInUserId })
 
@@ -29,7 +26,7 @@ export const LogoutBtn = () => {
             }
 
             toast.success(res?.data?.Message, { autoClose: 1000 })
-            dispatch(updateLoginStateData({}));
+            dispatch(logoutUser());
             dispatch(clearBoardData());
 
             router.push("/auth");

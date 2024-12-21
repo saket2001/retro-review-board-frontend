@@ -21,6 +21,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/redux-provider.tsx", "State/Slices/LoginSlice.ts", "State/store.ts"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/redux-provider.tsx", "State/Slices/LoginSlice.ts", "State/store.ts", "Hooks/useSession.tsz"],
   "exclude": ["node_modules"]
 }
