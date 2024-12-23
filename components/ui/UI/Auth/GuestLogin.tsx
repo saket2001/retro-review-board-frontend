@@ -14,9 +14,9 @@ import { toast } from "react-toastify";
 import { updateLoginStateData } from "@/State/Slices/LoginSlice";
 import { useRouter } from "next/navigation";
 import axios from "axios";
-import Cookies from 'js-cookie';
 import { Loader } from "../Loader/Loader";
 import { useAppDispatch } from "@/State/stateExports";
+import CommonHelper from "@/Helpers/CommonHelper";
 
 export default function GuestLogin() {
     const router = useRouter();
@@ -39,28 +39,23 @@ export default function GuestLogin() {
                 toast.error(res?.data?.Message);
                 return;
             } else {
-                const resultData = res?.data?.Result;
+                const result = res?.data?.Result;
                 toast.success(res?.data?.Message);
 
                 //handle state management
                 dispatch(updateLoginStateData({
                     isLoggedIn: true,
-                    loginToken: resultData?.accessToken,
-                    loggedInUserId: resultData?.user?.loggedInUserId,
-                    loggedInUserName: resultData?.user?.loggedInUserName,
+                    loginToken: result?.accessToken,
+                    loggedInUserId: result?.user?.loggedInUserId,
+                    loggedInUserName: result?.user?.loggedInUserName,
                     loginTokenExpiresIn: "",
                     isGuestUser: true,
                 }))
 
-                //storing refresh tokken
-                Cookies.set('refresh-token', resultData?.refreshToken, { secure: true, expires: 1, path: '/' });
-                Cookies.set('access-token', resultData?.accessToken, { secure: true, expires: 1, path: '/' });
+                const helper = new CommonHelper();
+                helper.SetAuthUserCookies(result);
 
-                //storing other details too
-                Cookies.set("loggedInUserId", resultData?.user?.loggedInUserId);
-                Cookies.set("loggedInUserName", resultData?.user?.loggedInUserName);
-
-                const previousUrl = document && document?.referrer;
+                const previousUrl = helper.GetPreviousVisitedUrl();
                 if (previousUrl)
                     router.push(previousUrl);
                 else

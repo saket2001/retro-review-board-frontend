@@ -13,10 +13,10 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { updateLoginStateData } from "@/State/Slices/LoginSlice";
-import Cookies from 'js-cookie';
 import { Loader } from "../Loader/Loader";
 import AxiosHelper from "@/Helpers/AxiosHelper";
 import { useAppDispatch } from "@/State/stateExports";
+import CommonHelper from "@/Helpers/CommonHelper";
 
 const userSchecma = z.object({
   userName: z
@@ -84,15 +84,15 @@ export default function LoginForm() {
           isGuestUser: false,
         }))
 
-        //storing refresh tokken
-        Cookies.set('refresh-token', result?.refreshToken, { secure: true, expires: 1, path: '/' });
-        Cookies.set('access-token', result?.accessToken, { secure: true, expires: 1, path: '/' });
+        //storing refresh token
+        const helper = new CommonHelper();
+        helper.SetAuthUserCookies(result);
 
-        //storing other details too
-        Cookies.set("loggedInUserId", result?.user?.loggedInUserId);
-        Cookies.set("loggedInUserName", result?.user?.loggedInUserName);
-
-        setTimeout(() => router.push("/board"), 2000);
+        const previousUrl = helper.GetPreviousVisitedUrl();
+        if (previousUrl && previousUrl != "/")
+          router.push(previousUrl);
+        else
+          router.push("/board")
       }
 
     } catch (err: unknown) {

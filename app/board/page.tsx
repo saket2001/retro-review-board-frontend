@@ -79,7 +79,7 @@ export default function BoardHome() {
                                     <RefreshIcon />
                                 </Button>
                                 {/* view options */}
-                                <TooltipProvider>
+                                {boardDataListState?.length > 0 && <TooltipProvider>
                                     <Tooltip>
                                         <TooltipTrigger>
                                             <Button variant={"ghost"} onClick={handlePageView}>
@@ -100,7 +100,7 @@ export default function BoardHome() {
                                             </p>
                                         </TooltipContent>
                                     </Tooltip>
-                                </TooltipProvider>
+                                </TooltipProvider>}
                             </div>
                         </div>
                         {(boardDataListState == undefined || boardDataListState?.length === 0) && (
