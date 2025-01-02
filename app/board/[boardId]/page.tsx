@@ -4,7 +4,7 @@ import IBoardData from "../../../Interfaces/IBoardData";
 import ILoginState from "../../../Interfaces/ILoginState";
 import { BoardDownloadIcon } from "../../../components/ui/UI/Board/BoardDownloadIcon/BoardDownloadIcon";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 import { BackButton } from "@/components/ui/UI/BackButton";
 import { Card, CardHeader } from "@/components/ui/card";
@@ -12,13 +12,13 @@ import Image from "next/image";
 import IBoardDataList from "@/Interfaces/IBoardDataList";
 import { useQuery } from "@tanstack/react-query";
 import { Loader } from "@/components/ui/UI/Loader/Loader";
-import { addBoardDataToBoardDataList } from "@/State/Slices/BoardSlice";
+import { updateBoardDataToBoardDataList } from "@/State/Slices/BoardSlice";
 import Heading from "@/components/ui/UI/HeadingComponent/Heading";
 import { Button } from "@/components/ui/MyButton";
 import { useAppDispatch, useAppSelector } from "@/State/stateExports";
 import SessionProvider from "@/app/SessionProvider";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-
+import ICommentsByBoardTitle from "@/Interfaces/ICommentsByBoardTitle";
 
 export default function BoardDetails({
     params,
@@ -26,42 +26,61 @@ export default function BoardDetails({
     params: { boardId: string };
 }) {
     const dispatch = useAppDispatch();
-    const [boardDataState, setBoardDataState] = useState<IBoardData>();
-    const [retroBoardTitles, setRetroBoardTitles] = useState<string[]>([]);
-    const loginData: ILoginState = useAppSelector((state) => state.loginState);
     const boardDataList: IBoardDataList = useAppSelector((state) => state.boardState);
-    const [IsBoardLocked, setIsBoardLocked] = useState(false);
-    const [showBoardLockAlert, setShowBoardLockAlert] = useState(true);
 
-    const { data, error, isLoading } = useQuery({
+    const boardData = useMemo(
+        () => boardDataList?.BoardDataList?.find(board => board?._id === params?.boardId),
+        [boardDataList, params.boardId]
+    );
+
+    const [IsBoardLocked] = useState(boardData?.isBoardLocked ?? false);
+    const [retroBoardTitles, setRetroBoardTitles] = useState<string[]>([]);
+    const [showBoardLockAlert, setShowBoardLockAlert] = useState(true);
+    const [commentsByBoardTitle, setCommentsByBoardTitle] = useState<ICommentsByBoardTitle>({});
+    const loginData: ILoginState = useAppSelector((state) => state.loginState);
+
+    const { error, isLoading } = useQuery({
         queryKey: ["board-by-id"],
         queryFn: async () => {
             const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/board/get-board-by-id?boardId=${params?.boardId}`);
             if (!res.ok) throw new Error('Network response was not ok');
             const data = await res.json();
-            dispatch(addBoardDataToBoardDataList({ NewBoardData: data?.Result }))
-            return data;
-        }
+            const tempData: IBoardData = {
+                ...data?.Result?.boardData,
+                commentDataList: data?.Result?.commentsArr
+            }
+            // setBoardData(tempData)
+            dispatch(updateBoardDataToBoardDataList({ NewBoardData: tempData }));
+            return tempData;
+        },
     });
 
+    const [loading, setLoading] = useState(isLoading)
+
     useEffect(() => {
-        const currBoardViewed: IBoardData | undefined = boardDataList?.BoardDataList?.find(d => d?._id === params?.boardId)
-        setBoardDataState(currBoardViewed);
-        setIsBoardLocked(boardDataState?.isBoardLocked ?? false)
-    }, [data, boardDataList, params?.boardId, boardDataState?.isBoardLocked, dispatch])
+        setLoading(true);
+        //creating a state object of comments as per category
+        if (boardData && boardData?.boardCategories && boardData?.boardCategories?.length > 0) {
+            const commentsByBoardTitleObj: ICommentsByBoardTitle = {};
+            const boardTitles = boardData?.boardCategories?.split(",");
+
+            //filtering comments as per category
+            boardTitles?.forEach((title) => {
+                commentsByBoardTitleObj[`${title}`] = boardData?.commentDataList?.filter(comment => comment?.category?.toLowerCase() == title?.toLowerCase());
+            });
+
+            setRetroBoardTitles(boardTitles);
+            setCommentsByBoardTitle(commentsByBoardTitleObj);
+        }
+
+        setLoading(false);
+    }, [boardData])
 
     if (error) {
         toast.error("Something went wrong...")
     };
 
-    const canUpdateBoardSetting: boolean = loginData?.loggedInUserId === boardDataState?.ownerUserId;
-
-    if (boardDataState?.boardCategories && retroBoardTitles.length === 0) {
-        setRetroBoardTitles(boardDataState?.boardCategories?.split(","));
-    }
-
-
-    const handleBoardShare = (e, boardId: string) => {
+    const handleBoardShare = useCallback((e, boardId: string) => {
         try {
             e.preventDefault();
             navigator?.clipboard?.writeText(`${process.env.NEXT_PUBLIC_FRONTEND_URL}/board/${boardId}`)
@@ -69,12 +88,17 @@ export default function BoardDetails({
         } catch {
             toast.error("Something went wrong !")
         }
-    }
+    }, [])
+
+    const canUpdateBoardSetting: boolean = loginData?.loggedInUserId === boardData?.ownerUserId;
+
+    if (loading)
+        return <Loader text="Loading Your Board Data, Hold On..." />
 
     return (
         <SessionProvider>
             <>
-                {isLoading && <Loader text="Loading Your Board Data, Hold On..." />}
+                {/* {loading && <Loader text="Loading Your Board Data, Hold On..." />} */}
                 {IsBoardLocked && showBoardLockAlert && <section className="flex justify-center items-center fixed w-full h-full bg-gray-500 top-0 left-0 z-30 bg-opacity-40">
                     <Card className="w-1/2">
                         <CardHeader className="flex justify-center items-center">
@@ -88,7 +112,7 @@ export default function BoardDetails({
                 <section className="flex flex-col px-3 py-2 h-full w-full">
                     <section className="flex gap-x-3 justify-between items-center px-2">
                         <div className="flex gap-2 items-center">
-                            <Heading title={boardDataState?.boardName ?? ""} variant="h2" extraStyles="font-semibold text-gray-900" />
+                            <Heading title={boardData?.boardName ?? ""} variant="h2" extraStyles="font-semibold text-gray-900" />
                             <span className="px-1">
                                 {IsBoardLocked ? <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
@@ -139,12 +163,12 @@ export default function BoardDetails({
                                     </Tooltip>
                                 </TooltipProvider>
                                 {/* Download btn icon */}
-                                <BoardDownloadIcon boardData={boardDataState} excelFileName={`${boardDataState?.boardName}_export_${new Date().toISOString()}_.xlsx`} />
+                                <BoardDownloadIcon boardData={boardData} excelFileName={`${boardData?.boardName}_export_${new Date().toISOString()}_.xlsx`} />
                             </div>
 
                         </div>
                     </section>
-                    {(boardDataState == undefined || boardDataState?.boardName?.length === 0) && (
+                    {(boardData == undefined || boardData?.boardName?.length === 0) && (
                         <div className="w-full h-full flex justify-center items-center my-5 py-4">
                             <Heading title="There is no board found for given board Id ! Try checking the board Id in url"
                                 variant="h3"
@@ -154,14 +178,14 @@ export default function BoardDetails({
                     )}
                     {retroBoardTitles?.length > 0 &&
                         <section className="grid lg:grid-cols-3 gap-3 py-4 px-1">
-                            {retroBoardTitles?.map((title, i) => (
+                            {retroBoardTitles?.map((title) => (
                                 <BoardList
-                                    key={i}
-                                    boardId={boardDataState?._id}
+                                    key={boardData?._id}
+                                    boardId={boardData?._id}
                                     extraStyles="rounded-md"
                                     listHeading={title}
-                                    maskUserComments={boardDataState?.userCommentsMasked ?? true}
-                                    dataList={boardDataState?.commentDataList?.filter(d => d.category?.toLowerCase() === title?.toLowerCase())}
+                                    maskUserComments={boardData?.userCommentsMasked ?? true}
+                                    dataList={commentsByBoardTitle[`${title}`]}
                                     loggedInUserId={loginData.loggedInUserId}
                                     isBoardLocked={IsBoardLocked}
                                 />

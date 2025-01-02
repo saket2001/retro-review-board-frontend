@@ -10,6 +10,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { useAppDispatch } from "@/State/stateExports";
+import AxiosHelper from "@/Helpers/AxiosHelper";
 
 
 interface BoardItemDropdownProps {
@@ -22,16 +23,24 @@ interface BoardItemDropdownProps {
 
 const BoardItemDropdown: FunctionComponent<BoardItemDropdownProps> = (props) => {
     const dispatch = useAppDispatch();
+    const helper = new AxiosHelper();
 
-    const handleCommentDelete = () => {
+    const handleCommentDelete = async () => {
         try {
-            //get comment id
-            //call store to delete it from store
-            dispatch(deleteBoardDataCommentById({ BoardId: props?.BoardId, CommentId: props?.commentId }))
-
             //call api endpoint
+            const bodyData = { boardId: props.BoardId, commentId: props.commentId };
+            const res = await helper.PostReq("/board/delete-comment", bodyData);
+
+            if (!res || res?.IsError)
+                toast.error(res?.Message ?? "Something went wrong");
+            else {
+                dispatch(deleteBoardDataCommentById({ BoardId: props?.BoardId, CommentId: props?.commentId }))
+                toast.success(res?.Message)
+            }
+
         }
         catch (error) {
+            console.log(error);
             toast.error(error?.message);
         }
     }

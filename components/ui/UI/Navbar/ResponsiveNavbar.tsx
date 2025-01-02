@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import ILoginState from "@/Interfaces/ILoginState";
 import { useAppSelector } from "@/State/stateExports";
@@ -98,11 +98,17 @@ const NavbarLarge = (props: MenuProps) => {
 };
 
 const NavBarSmall = (props: MenuProps) => {
+
+    const toggleMenuHandler = () => {
+        if (props.toggleMenuHandler)
+            props?.toggleMenuHandler();
+    }
+
     return (
         <div className="flex flex-col py-5 bg-gray-200 gap-y-3">
             <div className="flex justify-between items-center">
                 <h1 className="font-bold text-gray-900 mx-2 justify-self-center">
-                    <Link href={"/"}>Retro Board</Link>
+                    <Link href={"/"} onClick={toggleMenuHandler}>Retro Board</Link>
                 </h1>
                 <div className="lg:hidden flex">
                     <button type="button" onClick={() => { props.toggleMenuHandler() }}>
@@ -115,23 +121,23 @@ const NavBarSmall = (props: MenuProps) => {
 
             <ul className="flex flex-col gap-y-2 px-4">
                 <li className={linkDivClass}>
-                    <Link href="/">
+                    <Link href="/" onClick={toggleMenuHandler}>
                         Home
                     </Link>
                 </li>
                 {props?.showAuth && <li className={linkDivClass}>
-                    <Link href="/board">
+                    <Link href="/board" onClick={toggleMenuHandler}>
                         My Boards
                     </Link>
                 </li>}
                 {props?.showAuth && <li className={linkDivClass}>
-                    <Link href="/board/create-board">
+                    <Link href="/board/create-board" onClick={toggleMenuHandler}>
                         Create Board
                     </Link>
                 </li>}
                 {props.showAuth ? <div className="flex justify-center"><LogoutBtn /></div> : <div className="flex justify-center">
                     <Button>
-                        <Link href={"/auth"}>Log In</Link>
+                        <Link href={"/auth"} onClick={toggleMenuHandler}>Log In</Link>
                     </Button>
                 </div>}
             </ul>

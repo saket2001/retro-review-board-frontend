@@ -58,10 +58,10 @@ const BoardCard: FunctionComponent<BoardCardProps> = (props) => {
                         Categories :
                         <span className="text-gray-600 font-normal capitalize"> {props?.boardData?.boardCategories}</span>
                     </p>
-                    <p className="text-gray-800 font-semibold">
+                    {/* <p className="text-gray-800 font-semibold">
                         Total Comments :
                         <span className="text-gray-600 font-normal"> {props?.boardData?.commentDataList?.length ?? 0}</span>
-                    </p>
+                    </p> */}
                     <div className="flex gap-x-3">
                         <p className="text-gray-800 font-semibold">
                             Comments Masked :
