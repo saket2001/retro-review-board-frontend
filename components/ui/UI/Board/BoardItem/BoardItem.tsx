@@ -2,7 +2,6 @@ import { Card, CardDescription, CardFooter, CardHeader } from "@/components/ui/c
 import IBoardItem from "@/Interfaces/IBoardItem";
 import BoardItemDropdown from "./BoardItemDropdown";
 import { useState } from "react";
-import { toast } from "react-toastify";
 import BoardItemInput from "./BoardItemInput";
 import ReactMarkdown from 'react-markdown';
 
