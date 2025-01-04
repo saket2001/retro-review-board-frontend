@@ -10,6 +10,7 @@ class AxiosHelper {
         return {
           IsError: true,
           Message: response.data?.Message ?? "Something went wrong",
+          data: null,
         };
       //if success return message and data
       else {

@@ -16,7 +16,7 @@ interface BoardListProps {
 }
 
 const BoardList: FunctionComponent<BoardListProps> = (props) => {
-  const hasBoardItems = props.dataList?.length > 0 ? true : false;
+  const hasBoardItems = props?.dataList?.length > 0 ? true : false;
 
   return (
     <section className={`px-3 py-2 ${props.extraStyles}`}>

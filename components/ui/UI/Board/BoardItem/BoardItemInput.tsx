@@ -4,12 +4,12 @@ import { FunctionComponent, useState } from "react";
 import { toast } from "react-toastify";
 import IBoardItem from "@/Interfaces/IBoardItem";
 import { addBoardDataCommentById, updateBoardDataCommentById } from "@/State/Slices/BoardSlice";
-import { v4 as uuidv4 } from 'uuid';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import TurndownService from 'turndown';
 import { Button } from "@/components/ui/MyButton";
 import { useAppDispatch, useAppSelector } from "@/State/stateExports";
+import AxiosHelper from "@/Helpers/AxiosHelper";
 
 
 interface BoardItemInputProps {
@@ -17,7 +17,7 @@ interface BoardItemInputProps {
     boardItemCategory: string,
     IsItemNew: boolean,
     boardItemData: IBoardItem | null,
-    handleEditCommentFn: unknown,
+    handleEditCommentFn: () => void | null,
 }
 
 const modules = {
@@ -35,19 +35,16 @@ const BoardItemInput: FunctionComponent<BoardItemInputProps> = (props) => {
     const turndownService = new TurndownService();
     const [userComment, setUserComment] = useState(props?.boardItemData?.comment ?? "");
     const loginData: ILoginState = useAppSelector((state) => state.loginState);
+    const helper = new AxiosHelper();
     // const boardData: IBoardData = useAppSelector((state) => state.boardState);
 
-    const handleSave = (e: MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    const handleSave = async (e: MouseEvent<HTMLButtonElement, MouseEvent>) => {
         try {
-            //preventing form reload
             e.preventDefault();
 
             //converting the html into markdown
-            // const modifiedComment: string = userComment?.trim();
-            // const modifiedComment = userComment?.trim().substring(0, 1).toUpperCase() + userComment?.trim().substring(1, userComment?.length);
             const modifiedComment: string = turndownService.turndown(userComment?.trim());
             const commentTrimmedLength: number = modifiedComment?.length;
-
 
             //checking if input is empty
             if (commentTrimmedLength === 0) {
@@ -59,31 +56,41 @@ const BoardItemInput: FunctionComponent<BoardItemInputProps> = (props) => {
 
             //create comment object
             const comment: IBoardItem = {
-                Id: props.IsItemNew ? uuidv4() : props.boardItemData?.Id,
+                _id: props.IsItemNew ? null : props.boardItemData?._id,
+                boardId: props?.boardId ?? "",
                 comment: modifiedComment,
-                commerterName: loginData.loggedInUserName,
+                commenterName: loginData.loggedInUserName,
                 commenterId: loginData?.loggedInUserId,
                 category: props.boardItemCategory,
                 likes: props.boardItemData?.likes ?? "0",
-                createdAt: props.IsItemNew ? new Date().toString() : props.boardItemData?.createdAt,
-                updatedAt: new Date().toString(),
             }
 
-            //adding to store
-            if (props.IsItemNew)
-                dispatch(addBoardDataCommentById({
-                    BoardId: props?.boardId,
-                    NewComment: comment,
-                }));
-            else dispatch(updateBoardDataCommentById({
-                BoardId: props?.boardId,
-                UpdatedComment: comment,
-            }));
+            const res = await helper.PostReq("/board/save-comment", {
+                commentData: comment,
+            });
 
-            //calling api endpoint to save
 
-            //resetting ui input
-            setUserComment("");
+            if (!res?.IsError) {
+                //adding to store
+                if (props.IsItemNew)
+                    dispatch(addBoardDataCommentById({
+                        BoardId: props?.boardId,
+                        NewComment: res?.data,
+                    }));
+
+                else
+                    dispatch(updateBoardDataCommentById({
+                        BoardId: props?.boardId,
+                        UpdatedComment: res?.data,
+                    }));
+
+                //resetting ui input
+                setUserComment("");
+                toast.success(res?.Message)
+            }
+            else
+                toast.error(res?.Message)
+
             if (!props?.IsItemNew) props?.handleEditCommentFn(false);
         }
         catch (error: unknown) {

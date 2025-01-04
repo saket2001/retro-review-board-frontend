@@ -110,8 +110,6 @@ const BoardSettings: FunctionComponent<BoardSettingsProps> = (props) => {
             setBoardData(validatedData);
             // setBoardErrors([]);
 
-            console.log(validatedData);
-
             //save data logic
             if (props.isNew) {
                 dispatch(addBoardDataToBoardDataList({ NewBoardData: validatedData }))

@@ -34,8 +34,6 @@ export default function BoardSettingPage({
         setIsLoading(false)
     }, [params.boardId, cachedBoardsData])
 
-    console.log({ boardData });
-
     return (
         <SessionProvider>
             {isLoading && <Loader />}
