@@ -20,6 +20,12 @@ import SessionProvider from "@/app/SessionProvider";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import ICommentsByBoardTitle from "@/Interfaces/ICommentsByBoardTitle";
 
+import { io } from 'socket.io-client';
+const socket = io(`${process.env.NEXT_PUBLIC_API_URL}`, {
+    withCredentials: true, // Include cookies or other credentials
+});
+
+
 export default function BoardDetails({
     params,
 }: {
@@ -59,6 +65,7 @@ export default function BoardDetails({
 
     useEffect(() => {
         setLoading(true);
+
         //creating a state object of comments as per category
         if (boardData && boardData?.boardCategories && boardData?.boardCategories?.length > 0) {
             const commentsByBoardTitleObj: ICommentsByBoardTitle = {};
@@ -73,8 +80,31 @@ export default function BoardDetails({
             setCommentsByBoardTitle(commentsByBoardTitleObj);
         }
 
+        //
+        // socket.on('newComment', ({ boardId, newComment, commentCategory, action }) => {
+        //     console.log(newComment);
+
+        //     if (boardId === params.boardId) {
+        //         switch (action) {
+        //             case "newCommentAction":
+        //                 setCommentsByBoardTitle((prev) => {
+        //                     prev[commentCategory].push(newComment);
+        //                 })
+        //                 break;
+        //             case "commentUpdatedAction":
+        //                 break;
+        //             default:
+        //                 break;
+        //         }
+        //     }
+        // });
+
         setLoading(false);
-    }, [boardData])
+
+        return () => {
+            socket.off('newComment');
+        };
+    }, [boardData, params.boardId])
 
     if (error) {
         toast.error("Something went wrong...")
