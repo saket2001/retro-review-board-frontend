@@ -11,8 +11,6 @@ import ShareButton from "../../ShareButton";
 import Heading from "../../HeadingComponent/Heading";
 import { Button } from "@/components/ui/MyButton";
 import { useAppDispatch } from "@/State/stateExports";
-import { Tooltip } from "@radix-ui/react-tooltip";
-import { TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface BoardCardProps {
     boardData: IBoardData,
@@ -55,6 +53,10 @@ const BoardCard: FunctionComponent<BoardCardProps> = (props) => {
                 </CardHeader>
                 <CardContent className="flex flex-col gap-y-2">
                     <p className="text-gray-800 font-semibold">
+                        Code :
+                        <span className="text-gray-600 font-semibold"> {props?.boardData?.boardCode ?? ""}</span>
+                    </p>
+                    <p className="text-gray-800 font-semibold">
                         Categories :
                         <span className="text-gray-600 font-normal capitalize"> {props?.boardData?.boardCategories}</span>
                     </p>
@@ -62,37 +64,30 @@ const BoardCard: FunctionComponent<BoardCardProps> = (props) => {
                         Total Comments :
                         <span className="text-gray-600 font-normal"> {props?.boardData?.commentDataList?.length ?? 0}</span>
                     </p> */}
-                    <div className="flex gap-x-3">
-                        <p className="text-gray-800 font-semibold">
-                            Comments Masked :
-                            <span className="text-gray-600 font-normal"> {props?.boardData?.userCommentsMasked ? "Yes" : "No"}</span>
-                        </p>
-                        <p className="text-gray-800 font-semibold">
-                            Is Locked :
-                            <span className="text-gray-600 font-normal"> {props?.boardData?.isBoardLocked ? "Yes" : "No"}</span>
-                        </p>
-                    </div>
+                    <p className="text-gray-800 font-semibold">
+                        Comments Masked :
+                        <span className="text-gray-600 font-normal"> {props?.boardData?.userCommentsMasked ? "Yes" : "No"}</span>
+                    </p>
+                    <p className="text-gray-800 font-semibold">
+                        Is Locked :
+                        <span className="text-gray-600 font-normal"> {props?.boardData?.isBoardLocked ? "Yes" : "No"}</span>
+                    </p>
+                    <p className="text-gray-800 font-semibold">
+                        Delete Board Data After :
+                        <span className="text-gray-600 font-normal"> {props?.boardData?.deleteBoardDataAfterDays} {+props?.boardData?.deleteBoardDataAfterDays > 1 ? "Days" : " Day"}</span>
+                    </p>
                     <p className="text-gray-800 font-semibold">
                         Created On:
                         <span className="text-gray-600 font-normal"> {new Date(props?.boardData?.createdAt).toLocaleString()}</span>
                     </p>
                     <div className="flex items-center gap-x-3 my-1">
                         <Button className="w-fit">
-                            <Link href={`/board/${props?.boardData?._id}`}>View</Link>
+                            <Link href={`/board/${props?.boardData?.boardCode}`}>View</Link>
                         </Button>
                         <Button onClick={handleBoardDelete} className="w-fit" variant={"destructive"}>
                             Delete
                         </Button>
-                        <TooltipProvider>
-                            <Tooltip>
-                                <TooltipTrigger>
-                                    <ShareButton boardId={props?.boardData?._id} />
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                    <p>Share with others</p>
-                                </TooltipContent>
-                            </Tooltip>
-                        </TooltipProvider>
+                        <ShareButton boardId={props?.boardData?.boardCode} />
 
                         <Button className="font-semibold" variant={"ghost"}>
                             <Link href={`/board/settings/${props.boardData?._id}`}>

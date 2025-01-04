@@ -4,7 +4,7 @@ import IBoardData from "../../../Interfaces/IBoardData";
 import ILoginState from "../../../Interfaces/ILoginState";
 import { BoardDownloadIcon } from "../../../components/ui/UI/Board/BoardDownloadIcon/BoardDownloadIcon";
 import Link from "next/link";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 import { BackButton } from "@/components/ui/UI/BackButton";
 import { Card, CardHeader } from "@/components/ui/card";
@@ -17,13 +17,14 @@ import Heading from "@/components/ui/UI/HeadingComponent/Heading";
 import { Button } from "@/components/ui/MyButton";
 import { useAppDispatch, useAppSelector } from "@/State/stateExports";
 import SessionProvider from "@/app/SessionProvider";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import ICommentsByBoardTitle from "@/Interfaces/ICommentsByBoardTitle";
+import ShareButton from "@/components/ui/UI/ShareButton";
 
-import { io } from 'socket.io-client';
-const socket = io(`${process.env.NEXT_PUBLIC_API_URL}`, {
-    withCredentials: true, // Include cookies or other credentials
-});
+// import { io } from 'socket.io-client';
+// import ShareButton from "@/components/ui/UI/ShareButton";
+// const socket = io(`${process.env.NEXT_PUBLIC_API_URL}`, {
+//     withCredentials: true, // Include cookies or other credentials
+// });
 
 
 export default function BoardDetails({
@@ -35,7 +36,7 @@ export default function BoardDetails({
     const boardDataList: IBoardDataList = useAppSelector((state) => state.boardState);
 
     const boardData = useMemo(
-        () => boardDataList?.BoardDataList?.find(board => board?._id === params?.boardId),
+        () => boardDataList?.BoardDataList?.find(board => board?.boardCode === params?.boardId),
         [boardDataList, params.boardId]
     );
 
@@ -51,11 +52,11 @@ export default function BoardDetails({
             const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/board/get-board-by-id?boardId=${params?.boardId}`);
             if (!res.ok) throw new Error('Network response was not ok');
             const data = await res.json();
+
             const tempData: IBoardData = {
                 ...data?.Result?.boardData,
                 commentDataList: data?.Result?.commentsArr
             }
-            // setBoardData(tempData)
             dispatch(updateBoardDataToBoardDataList({ NewBoardData: tempData }));
             return tempData;
         },
@@ -101,29 +102,20 @@ export default function BoardDetails({
 
         setLoading(false);
 
-        return () => {
-            socket.off('newComment');
-        };
+        // return () => {
+        //     socket.off('newComment');
+        // };
     }, [boardData, params.boardId])
-
-    if (error) {
-        toast.error("Something went wrong...")
-    };
-
-    const handleBoardShare = useCallback((e, boardId: string) => {
-        try {
-            e.preventDefault();
-            navigator?.clipboard?.writeText(`${process.env.NEXT_PUBLIC_FRONTEND_URL}/board/${boardId}`)
-            toast.success("Url copied to clipboard")
-        } catch {
-            toast.error("Something went wrong !")
-        }
-    }, [])
-
-    const canUpdateBoardSetting: boolean = loginData?.loggedInUserId === boardData?.ownerUserId;
 
     if (loading)
         return <Loader text="Loading Your Board Data, Hold On..." />
+
+    if (error) {
+        console.log(error);
+        toast.error("Something went wrong...")
+    };
+
+    const canUpdateBoardSetting: boolean = loginData?.loggedInUserId === boardData?.ownerUserId;
 
     return (
         <SessionProvider>
@@ -140,7 +132,7 @@ export default function BoardDetails({
                     </Card>
                 </section>}
                 <section className="flex flex-col px-3 py-2 h-full w-full">
-                    <section className="flex gap-x-3 justify-between items-center px-2">
+                    {boardData && <section className="flex flex-col lg:flex-row gap-3 lg:justify-between lg:items-center px-2">
                         <div className="flex gap-2 items-center">
                             <Heading title={boardData?.boardName ?? ""} variant="h2" extraStyles="font-semibold text-gray-900" />
                             <span className="px-1">
@@ -165,39 +157,13 @@ export default function BoardDetails({
                                     </Link>
                                 </Button>}
                                 {/* share btn */}
-                                <TooltipProvider>
-                                    <Tooltip>
-                                        <TooltipTrigger>
-                                            <div
-                                                onClick={(e) => handleBoardShare(e, params?.boardId)}
-                                            >
-                                                <svg
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    fill="none"
-                                                    viewBox="0 0 24 24"
-                                                    strokeWidth={1.5}
-                                                    stroke="black"
-                                                    className="size-5 ease-in transition-all hover:scale-95"
-                                                >
-                                                    <path
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                        d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935-2.186Zm0-12.814a2.25 2.25 0 1 0 3.933-2.185 2.25 2.25 0 0 0-3.933 2.185Z"
-                                                    />
-                                                </svg>
-                                            </div>
-                                        </TooltipTrigger>
-                                        <TooltipContent>
-                                            <p>Share with others</p>
-                                        </TooltipContent>
-                                    </Tooltip>
-                                </TooltipProvider>
+                                <ShareButton boardId={boardData?.boardCode} />
                                 {/* Download btn icon */}
                                 <BoardDownloadIcon boardData={boardData} excelFileName={`${boardData?.boardName}_export_${new Date().toISOString()}_.xlsx`} />
                             </div>
 
                         </div>
-                    </section>
+                    </section>}
                     {(boardData == undefined || boardData?.boardName?.length === 0) && (
                         <div className="w-full h-full flex justify-center items-center my-5 py-4">
                             <Heading title="There is no board found for given board Id ! Try checking the board Id in url"

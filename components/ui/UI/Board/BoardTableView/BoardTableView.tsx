@@ -1,12 +1,11 @@
 "use client"
 import { Button } from '@/components/ui/MyButton'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import IBoardData from '@/Interfaces/IBoardData'
 import Link from 'next/link'
 import React from 'react'
 import ShareButton from '../../ShareButton'
 
-const boardTableHeadings = ["Sr No", "Title", "Categries", "Locked", "Comments Masked", "Creation Date", "Actions", "", "", ""]
+const boardTableHeadings = ["Sr No", "Title", "Code", "Categries", "Locked", "Comments Masked", "Delete Board After", "Creation Date", "Actions", "", "", ""]
 
 interface IProps {
     listOfBoards: IBoardData[]
@@ -32,7 +31,6 @@ const BoardTableView: React.FC<IProps> = ({ listOfBoards }) => {
             toast.error(error.message)
         }
     }
-
 
     return (
         <div className="relative flex flex-col w-full h-full overflow-scroll text-gray-700 bg-white shadow-md rounded-xl bg-clip-border">
@@ -64,6 +62,11 @@ const BoardTableView: React.FC<IProps> = ({ listOfBoards }) => {
                             </td>
                             <td className="p-4 border-b border-blue-gray-50">
                                 <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
+                                    {boardData?.boardCode}
+                                </p>
+                            </td>
+                            <td className="p-4 border-b border-blue-gray-50">
+                                <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
                                     {boardData?.boardCategories}
                                 </p>
                             </td>
@@ -75,6 +78,11 @@ const BoardTableView: React.FC<IProps> = ({ listOfBoards }) => {
                             <td className="p-4 border-b border-blue-gray-50">
                                 <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
                                     {boardData?.userCommentsMasked ? "Yes" : "No"}
+                                </p>
+                            </td>
+                            <td className="p-4 border-b border-blue-gray-50">
+                                <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
+                                    {boardData?.deleteBoardDataAfterDays} {+boardData?.deleteBoardDataAfterDays > 1 ? "Days" : "Day"}
                                 </p>
                             </td>
                             <td className="p-4 border-b border-blue-gray-50">
@@ -91,16 +99,7 @@ const BoardTableView: React.FC<IProps> = ({ listOfBoards }) => {
                                 Delete
                             </Button></td>
                             <td className="p-4 border-b border-blue-gray-50">
-                                <TooltipProvider>
-                                    <Tooltip>
-                                        <TooltipTrigger>
-                                            <ShareButton boardId={boardData?._id} />
-                                        </TooltipTrigger>
-                                        <TooltipContent>
-                                            <p>Share with others</p>
-                                        </TooltipContent>
-                                    </Tooltip>
-                                </TooltipProvider>
+                                <ShareButton boardId={boardData?.boardCode} />
                             </td>
                             <td className="p-4 border-b border-blue-gray-50">
                                 <Button className="font-semibold" variant={"ghost"}>
