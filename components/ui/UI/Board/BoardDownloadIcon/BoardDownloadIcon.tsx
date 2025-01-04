@@ -16,7 +16,6 @@ interface IBoardDataExcelFormat {
     comment: string,
     commenterName: string,
     boardCategory: string,
-    likes: string,
     createdAt: string
 }
 
@@ -35,10 +34,9 @@ export const BoardDownloadIcon = (props: downloadIconProps) => {
             //create a new data array of certain type
             const convertedBoardData: IBoardDataExcelFormat[] = boardData?.commentDataList?.map((data: IBoardItem) => ({
                 comment: stripHtmlTags(marked(data.comment?.trim())), // Convert and clean up Markdown
-                commenterName: data.commerterName,
+                commenterName: data.commenterName,
                 boardCategory: data.category,
-                likes: data.likes,
-                createdAt: data.createdAt,
+                createdAt: data?.createdAt ? new Date(data.createdAt)?.toLocaleString() : "",
             }));
 
             return convertedBoardData;
@@ -54,33 +52,35 @@ export const BoardDownloadIcon = (props: downloadIconProps) => {
             // Create a new workbook and worksheet
             const excelData: IBoardDataExcelFormat[] = processBoardData();
 
-            const worksheet = XLSX.utils.json_to_sheet(excelData);
+            if (excelData) {
 
-            // Rename headers
-            worksheet['A1'].v = 'User Comment';
-            worksheet['B1'].v = 'Commenter Name';
-            worksheet['C1'].v = 'Category';
-            worksheet['D1'].v = 'Total Likes';
-            worksheet['E1'].v = 'Date Created';
+                const worksheet = XLSX.utils.json_to_sheet(excelData);
 
-            const workbook = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+                // Rename headers
+                worksheet['A1'].v = 'Comment';
+                worksheet['B1'].v = 'Commenter Name';
+                worksheet['C1'].v = 'Category';
+                worksheet['D1'].v = 'Date Created';
 
-            // Convert workbook to binary and trigger download
-            const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-            const blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
-            const url = window.URL.createObjectURL(blob);
+                const workbook = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
 
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = props?.excelFileName?.length > 0 ? props?.excelFileName : 'export.xlsx';
-            link.click();
+                // Convert workbook to binary and trigger download
+                const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+                const blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
+                const url = window.URL.createObjectURL(blob);
 
-            // Clean up
-            window.URL.revokeObjectURL(url);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = props?.excelFileName?.length > 0 ? props?.excelFileName : 'export.xlsx';
+                link.click();
+
+                // Clean up
+                window.URL.revokeObjectURL(url);
+            }
         } catch (error) {
             console.log(error);
-            toast.error("No data available to export to excel!", { autoClose: 1500 });
+            toast.error("No data available to export to excel!");
             return;
         }
     };

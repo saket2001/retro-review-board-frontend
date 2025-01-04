@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/MyButton";
 import BoardTableView from "@/components/ui/UI/Board/BoardTableView/BoardTableView";
 import RefreshIcon from "@/components/ui/Icons/RefreshIcon";
 import useSessionStorageState from 'use-session-storage-state'
+import BoardShareInput from "@/components/ui/UI/Board/BoardShareInput/BoardShareInput";
 
 export default function BoardHome() {
     const dispatch = useAppDispatch();
@@ -70,6 +71,7 @@ export default function BoardHome() {
             <>
                 {isLoading && <Loader />}
                 <section className="flex flex-col px-3 py-2 h-full w-full">
+                    {/* header */}
                     <section className="flex flex-col gap-3 px-2">
                         <div className="flex justify-between px-1">
                             <Heading title={`Welcome ${loginData.loggedInUserName ?? "User"}`} variant="h1" extraStyles="lg:text-2xl" />
@@ -114,6 +116,8 @@ export default function BoardHome() {
                             </div>
                         )}
                     </section>
+
+                    {/* board views */}
                     {boardDataListState?.length > 0 && (
                         currentView === "grid" ?
                             <section className="grid lg:grid-cols-2 gap-3 lg:gap-x-8 py-4 px-1">
@@ -125,6 +129,11 @@ export default function BoardHome() {
                                 <BoardTableView listOfBoards={boardDataListState} />
                             </section>)
                     }
+
+                    {/* board share input */}
+                    <div className="fixed z-30 bottom-10 right-16 mr-2">
+                        <BoardShareInput />
+                    </div>
                 </section>
             </>
         </SessionProvider>

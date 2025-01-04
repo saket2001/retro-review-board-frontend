@@ -22,11 +22,11 @@ const BoardList: FunctionComponent<BoardListProps> = (props) => {
     <section className={`px-3 py-2 ${props.extraStyles}`}>
       <Heading variant="h1" extraStyles="px-2 py-1" title={props.listHeading} />
 
-      <div className="flex flex-col gap-y-1 p-2">
+      <div className="flex flex-col gap-y-3 p-2">
         {hasBoardItems &&
           props?.dataList?.map((item: IBoardItem) =>
 
-            <BoardItem key={item.Id}
+            <BoardItem key={item._id}
               BoardId={props?.boardId}
               data={item}
               maskUserComments={props.maskUserComments}

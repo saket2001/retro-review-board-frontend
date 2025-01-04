@@ -8,6 +8,7 @@ export default interface IBoardData {
   deleteBoardDataAfterDays: string;
   userCommentsMasked: boolean;
   isBoardLocked: boolean;
+  boardCode?: string;
   createdAt: string;
   commentDataList: IBoardItem[];
 }
