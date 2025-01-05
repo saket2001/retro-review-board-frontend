@@ -5,7 +5,6 @@ import ILoginState from "../../../Interfaces/ILoginState";
 import { BoardDownloadIcon } from "../../../components/ui/UI/Board/BoardDownloadIcon/BoardDownloadIcon";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import { toast } from "react-toastify";
 import { BackButton } from "@/components/ui/UI/BackButton";
 import { Card, CardHeader } from "@/components/ui/card";
 import Image from "next/image";
