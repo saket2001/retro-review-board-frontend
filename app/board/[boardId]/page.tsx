@@ -107,12 +107,11 @@ export default function BoardDetails({
         // };
     }, [boardData, params.boardId])
 
-    if (loading)
-        return <Loader text="Loading Your Board Data, Hold On..." />
+    // if (loading)
+    //     return <Loader text="Loading Your Board Data, Hold On..." />
 
     if (error) {
         console.log(error);
-        toast.error("Something went wrong...")
     };
 
     const canUpdateBoardSetting: boolean = loginData?.loggedInUserId === boardData?.ownerUserId;
@@ -120,7 +119,21 @@ export default function BoardDetails({
     return (
         <SessionProvider>
             <>
-                {/* {loading && <Loader text="Loading Your Board Data, Hold On..." />} */}
+                {loading && <Loader text="Loading Your Board Data, Hold On..." />}
+                {(boardData == undefined || boardData?.boardName?.length === 0) && (
+                    <div className="w-full h-full flex flex-col justify-center items-center my-5 py-4 gap-2">
+                        <Heading
+                            title="It looks like you entered wrong board"
+                            variant="h1"
+                            extraStyles="font-medium"
+                        />
+                        <Heading
+                            title="Please try again by entering correct board code."
+                            variant="h3"
+                        />
+                        <BackButton text="Go Back" />
+                    </div>
+                )}
                 {IsBoardLocked && showBoardLockAlert && <section className="flex justify-center items-center fixed w-full h-full bg-gray-500 top-0 left-0 z-30 bg-opacity-40">
                     <Card className="w-1/2">
                         <CardHeader className="flex justify-center items-center">
@@ -164,14 +177,6 @@ export default function BoardDetails({
 
                         </div>
                     </section>}
-                    {(boardData == undefined || boardData?.boardName?.length === 0) && (
-                        <div className="w-full h-full flex justify-center items-center my-5 py-4">
-                            <Heading title="There is no board found for given board Id ! Try checking the board Id in url"
-                                variant="h3"
-                                extraStyles="font-medium"
-                            />
-                        </div>
-                    )}
                     {retroBoardTitles?.length > 0 &&
                         <section className="grid lg:grid-cols-3 gap-3 py-4 px-1">
                             {retroBoardTitles?.map((title) => (
