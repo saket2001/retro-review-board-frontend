@@ -26,7 +26,7 @@ const BoardShareInput = () => {
     return (
         <Popover >
             <PopoverTrigger>
-                <Button>Add Board Code</Button>
+                <Button>Join Board</Button>
             </PopoverTrigger>
             <PopoverContent className='w-60 shadow-md'>
                 <div className="flex flex-col gap-y-4">

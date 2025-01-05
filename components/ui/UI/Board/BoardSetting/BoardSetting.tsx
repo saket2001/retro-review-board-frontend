@@ -4,12 +4,6 @@ import { z, ZodError } from "zod";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-    Tooltip,
-    TooltipContent,
-    TooltipProvider,
-    TooltipTrigger,
-} from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/MyButton";
 import { FunctionComponent, MouseEvent, useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -21,12 +15,14 @@ import AxiosHelper from "@/Helpers/AxiosHelper";
 import { Loader } from "../../Loader/Loader";
 import { useAppDispatch, useAppSelector } from "@/State/stateExports";
 import SessionProvider from "@/app/SessionProvider";
+import ShareButton from "../../ShareButton";
 
 const BoardItemSchecma = z.object({
     _id: z.string(),
+    boardId: z.string(),
     comment: z.string(),
     commenterId: z.string(),
-    commerterName: z.string(),
+    commenterName: z.string(),
     category: z.string(),
     likes: z.string(),
     createdAt: z.string(),
@@ -41,15 +37,13 @@ const BoardSettingSchecma = z.object({
         .max(50)
         .default(`Retro Board ${new Date().toDateString()}`),
     ownerUserId: z.string().optional(),
-    deleteBoardDataAfterDays: z.string().min(1).max(5).default("2"),
+    deleteBoardDataAfterDays: z.number().optional().default(2),
     boardCategories: z.string({ message: "Retro Board Categoies is required!" }).max(100),
     userCommentsMasked: z.boolean().optional(),
     isBoardLocked: z.boolean().optional(),
     commentDataList: z.array(BoardItemSchecma).optional(),
     createdAt: z.string().default(new Date().toString())
 });
-
-// type IBoardSetting = z.infer<typeof BoardSettingSchecma>;
 
 interface BoardSettingsProps {
     boardData?: IBoardData
@@ -76,7 +70,7 @@ const BoardSettings: FunctionComponent<BoardSettingsProps> = (props) => {
                 userCommentsMasked: false,
                 isBoardLocked: false,
                 commentDataList: [],
-                deleteBoardDataAfterDays: "2",
+                deleteBoardDataAfterDays: 2,
                 createdAt: new Date().toString(),
             };
         }
@@ -150,16 +144,6 @@ const BoardSettings: FunctionComponent<BoardSettingsProps> = (props) => {
         }
     };
 
-    const handleBoardShare = (e, boardId: string) => {
-        try {
-            e.preventDefault();
-            navigator?.clipboard?.writeText(`${process.env.NEXT_PUBLIC_FRONTEND_URL}/board/${boardId}`)
-            toast.success("Url copied to clipboard")
-        } catch {
-            toast.error("Something went wrong !")
-        }
-    }
-
     return (
         <SessionProvider>
             <>
@@ -172,36 +156,10 @@ const BoardSettings: FunctionComponent<BoardSettingsProps> = (props) => {
                                 type="text"
                                 disabled
                                 name="boardId"
-                                value={boardData?._id}
+                                value={boardData?.boardCode}
                                 className="w-2/3"
                             ></Input>
-                            <TooltipProvider>
-                                <Tooltip>
-                                    <TooltipTrigger>
-                                        <div
-                                            onClick={(e) => handleBoardShare(e, boardData?._id)}
-                                        >
-                                            <svg
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                fill="none"
-                                                viewBox="0 0 24 24"
-                                                strokeWidth={1.5}
-                                                stroke="currentColor"
-                                                className="size-5 ease-in transition-all hover:scale-105"
-                                            >
-                                                <path
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935-2.186Zm0-12.814a2.25 2.25 0 1 0 3.933-2.185 2.25 2.25 0 0 0-3.933 2.185Z"
-                                                />
-                                            </svg>
-                                        </div>
-                                    </TooltipTrigger>
-                                    <TooltipContent>
-                                        <p>Share with others</p>
-                                    </TooltipContent>
-                                </Tooltip>
-                            </TooltipProvider>
+                            <ShareButton boardId={boardData?.boardCode} />
                         </div>
                     </div>}
                     <div className="flex flex-col w-50 gap-y-2">
@@ -235,7 +193,7 @@ const BoardSettings: FunctionComponent<BoardSettingsProps> = (props) => {
                             type="text"
                             name="deleteBoardDataAfterDays"
                             className="w-1/2"
-                            value={boardData?.deleteBoardDataAfterDays}
+                            value={boardData?.deleteBoardDataAfterDays?.toString()}
                             onChange={handleChange}
                         ></Input>
                         {boardErrors?.deleteBoardDataAfterDays && (

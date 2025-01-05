@@ -5,7 +5,7 @@ export default interface IBoardData {
   boardName: string;
   ownerUserId: string;
   boardCategories: string;
-  deleteBoardDataAfterDays: string;
+  deleteBoardDataAfterDays: number;
   userCommentsMasked: boolean;
   isBoardLocked: boolean;
   boardCode?: string;

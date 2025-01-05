@@ -29,10 +29,11 @@ export default function BoardSettingPage({
         if (cachedBoardsData !== undefined) {
             setIsLoading(true)
             const arr = cachedBoardsData?.Result;
-            setBoardData(arr?.find(d => d._id === params?.boardId))
+            setBoardData(arr?.find(board => board.boardCode === params?.boardId))
         }
         setIsLoading(false)
     }, [params.boardId, cachedBoardsData])
+
 
     return (
         <SessionProvider>
