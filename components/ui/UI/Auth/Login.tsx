@@ -88,11 +88,7 @@ export default function LoginForm() {
         const helper = new CommonHelper();
         helper.SetAuthUserCookies(result);
 
-        const previousUrl = helper.GetPreviousVisitedUrl();
-        if (previousUrl && previousUrl != "/")
-          router.push(previousUrl);
-        else
-          router.push("/board")
+        router.push("/board")
       }
 
     } catch (err: unknown) {
