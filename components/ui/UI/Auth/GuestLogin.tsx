@@ -54,6 +54,8 @@ export default function GuestLogin() {
 
                 const helper = new CommonHelper();
                 helper.SetAuthUserCookies(result);
+
+                router.push("/board")
             }
         } catch {
             setIsLoading(false)

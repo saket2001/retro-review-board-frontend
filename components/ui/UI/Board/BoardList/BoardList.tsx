@@ -1,10 +1,9 @@
 "use client";
-import { FunctionComponent, useEffect, useState } from "react";
+import { FunctionComponent } from "react";
 import BoardItem from "../BoardItem/BoardItem";
 import IBoardItem from "@/Interfaces/IBoardItem";
 import Heading from "../../HeadingComponent/Heading";
 import BoardItemInput from "../BoardItem/BoardItemInput";
-import { Loader } from "../../Loader/Loader";
 
 interface BoardListProps {
   boardId: string | undefined,
