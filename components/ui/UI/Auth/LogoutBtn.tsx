@@ -25,11 +25,11 @@ export const LogoutBtn = () => {
                 return;
             }
 
-            toast.success(res?.data?.Message, { autoClose: 1000 })
+            toast.success(res?.data?.Message)
+            router.push("/auth");
             dispatch(logoutUser());
             dispatch(clearBoardData());
 
-            router.push("/auth");
         } catch (error) {
             console.log(error);
             toast.error("Something went wrong")

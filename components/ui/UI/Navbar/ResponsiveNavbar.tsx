@@ -81,7 +81,7 @@ const NavbarLarge = (props: MenuProps) => {
                 </li>
                 {props?.showAuth && <li className={linkDivClass}>
                     <Link href="/board">
-                        My Boards
+                        Boards
                     </Link>
                 </li>}
                 {props?.showAuth && <li className={linkDivClass}>
@@ -127,7 +127,7 @@ const NavBarSmall = (props: MenuProps) => {
                 </li>
                 {props?.showAuth && <li className={linkDivClass}>
                     <Link href="/board" onClick={toggleMenuHandler}>
-                        My Boards
+                        Boards
                     </Link>
                 </li>}
                 {props?.showAuth && <li className={linkDivClass}>

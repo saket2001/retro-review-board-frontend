@@ -12,8 +12,8 @@ const WelcomeAuth = () => {
   const router = useRouter();
   const userLoginState = useAppSelector(state => state.loginState);
 
-  if (userLoginState.isLoggedIn) {
-    router.back();
+  if (userLoginState?.isLoggedIn) {
+    router.replace("/")
   }
 
   return (

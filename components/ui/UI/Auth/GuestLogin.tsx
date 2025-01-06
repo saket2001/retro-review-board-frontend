@@ -54,12 +54,6 @@ export default function GuestLogin() {
 
                 const helper = new CommonHelper();
                 helper.SetAuthUserCookies(result);
-
-                const previousUrl = helper.GetPreviousVisitedUrl();
-                if (previousUrl)
-                    router.push(previousUrl);
-                else
-                    router.push("/board")
             }
         } catch {
             setIsLoading(false)

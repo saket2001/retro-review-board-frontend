@@ -7,8 +7,15 @@ const ShareButton = (props: { boardId: string | undefined }) => {
     const handleBoardShare = () => {
         try {
             if (props.boardId) {
-                navigator?.clipboard?.writeText(`${props.boardId}`)
-                toast.success("Share the Board Code copied to your clipboard")
+                navigator?.clipboard?.writeText(`You're Invited! 🎉
+Hi Everyone,
+Join our board and be part of the action! Use the unique code below to access the board and collaborate with the team.
+Your Joining Code: ${props.boardId}
+Simply enter this code in the My Boards page after completing loggin.
+Head to this site and login using guest mode or user. ${process.env.NEXT_PUBLIC_FRONTEND_URL}
+Share your valueable insights of the sprint 🚀
+`)
+                toast.success("Code copied to your clipboard")
             }
         } catch {
             toast.error("Something went wrong !")

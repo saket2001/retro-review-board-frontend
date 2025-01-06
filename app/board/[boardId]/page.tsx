@@ -32,10 +32,14 @@ export default function BoardDetails({
     params: { boardId: string };
 }) {
     const dispatch = useAppDispatch();
+    const [loading, setLoading] = useState(true)
     const boardDataList: IBoardDataList = useAppSelector((state) => state.boardState);
-
-    const boardData = useMemo(
-        () => boardDataList?.BoardDataList?.find(board => board?.boardCode === params?.boardId),
+    const boardData: IBoardData | undefined = useMemo(
+        () => {
+            setLoading(true);
+            return boardDataList?.BoardDataList?.find(board => board?.boardCode === params?.boardId) ?? undefined
+            setLoading(false);
+        },
         [boardDataList, params.boardId]
     );
 
@@ -45,9 +49,10 @@ export default function BoardDetails({
     const [commentsByBoardTitle, setCommentsByBoardTitle] = useState<ICommentsByBoardTitle>({});
     const loginData: ILoginState = useAppSelector((state) => state.loginState);
 
-    const { error, isLoading } = useQuery({
+    const { error } = useQuery({
         queryKey: ["board-by-id"],
         queryFn: async () => {
+            setLoading(true);
             const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/board/get-board-by-id?boardId=${params?.boardId}`);
             if (!res.ok) throw new Error('Network response was not ok');
             const data = await res.json();
@@ -61,7 +66,6 @@ export default function BoardDetails({
         },
     });
 
-    const [loading, setLoading] = useState(isLoading)
 
     useEffect(() => {
         setLoading(true);
@@ -106,10 +110,11 @@ export default function BoardDetails({
         // };
     }, [boardData, params.boardId])
 
-    // if (loading)
-    //     return <Loader text="Loading Your Board Data, Hold On..." />
+    if (loading)
+        return <Loader text="Loading Your Board Data, Hold On..." />
 
     if (error) {
+        setLoading(false);
         console.log(error);
     };
 
@@ -118,21 +123,7 @@ export default function BoardDetails({
     return (
         <SessionProvider>
             <>
-                {loading && <Loader text="Loading Your Board Data, Hold On..." />}
-                {(boardData == undefined || boardData?.boardName?.length === 0) && (
-                    <div className="w-full h-full flex flex-col justify-center items-center my-5 py-4 gap-2">
-                        <Heading
-                            title="It looks like you entered wrong board"
-                            variant="h1"
-                            extraStyles="font-medium"
-                        />
-                        <Heading
-                            title="Please try again by entering correct board code."
-                            variant="h3"
-                        />
-                        <BackButton text="Go Back" />
-                    </div>
-                )}
+                {/* {loading && <Loader text="Loading Your Board Data, Hold On..." />} */}
                 {IsBoardLocked && showBoardLockAlert && <section className="flex justify-center items-center fixed w-full h-full bg-gray-500 top-0 left-0 z-30 bg-opacity-40">
                     <Card className="w-1/2">
                         <CardHeader className="flex justify-center items-center">
@@ -190,8 +181,23 @@ export default function BoardDetails({
                                     isBoardLocked={IsBoardLocked}
                                 />
                             ))}
-                        </section>}
+                        </section>
+                    }
                 </section>
+                {!loading && !boardData && (
+                    <div className="w-full h-full flex flex-col justify-center items-center my-5 py-4 gap-2">
+                        <Heading
+                            title="It looks like you entered wrong board"
+                            variant="h1"
+                            extraStyles="font-medium"
+                        />
+                        <Heading
+                            title="Please try again by entering correct board code."
+                            variant="h3"
+                        />
+                        <BackButton text="Go Back" />
+                    </div>
+                )}
             </>
         </SessionProvider>
     );
