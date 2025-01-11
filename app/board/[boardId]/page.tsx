@@ -14,7 +14,6 @@ import { NotFoundBoardSection } from "@/components/ui/UI/Board/NotFoundBoardSect
 import { BoardLockedSection } from "@/components/ui/UI/Board/BoardLockedSection";
 import BoardCommentHeader from "@/components/ui/UI/Board/BoardCommentHeader";
 import { socket } from "@/app/page";
-import { toast } from "react-toastify";
 
 export default function BoardDetails({
     params,
