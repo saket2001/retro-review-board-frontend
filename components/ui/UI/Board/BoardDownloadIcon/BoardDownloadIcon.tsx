@@ -25,7 +25,6 @@ export const BoardDownloadIcon = (props: downloadIconProps) => {
 
     const processBoardData = (): IBoardDataExcelFormat[] | void => {
         try {
-
             //validation
             if (boardData == undefined || boardData?.commentDataList.length === 0) {
                 throw new Error("No data present for converting to excel!")
@@ -34,7 +33,7 @@ export const BoardDownloadIcon = (props: downloadIconProps) => {
             //create a new data array of certain type
             const convertedBoardData: IBoardDataExcelFormat[] = boardData?.commentDataList?.map((data: IBoardItem) => ({
                 comment: stripHtmlTags(marked(data.comment?.trim())), // Convert and clean up Markdown
-                commenterName: data.commenterName,
+                commenterName: boardData?.userCommentsMasked ? "Guest" : data.commenterName,
                 boardCategory: data.category,
                 createdAt: data?.createdAt ? new Date(data.createdAt)?.toLocaleString() : "",
             }));

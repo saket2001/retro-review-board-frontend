@@ -107,11 +107,11 @@ export default function BoardHome() {
                                         </TooltipProvider>}
                                     </div>
                                 </section>
-                                {boardDataListState?.length > 0 &&
+                                {/* {boardDataListState?.length > 0 &&
                                     <section>
                                         <Button variant={"ghost"}>Owned By You</Button>
                                     </section>
-                                }
+                                } */}
                             </div>
                         </div>
                         {(boardDataListState == undefined || boardDataListState?.length === 0) && (

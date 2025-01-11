@@ -1,6 +1,15 @@
 import Heading from "@/components/ui/UI/HeadingComponent/Heading";
 import SessionProvider from "./SessionProvider";
 
+import { io } from 'socket.io-client';
+
+export const socket = io(`${process.env.NEXT_PUBLIC_BACKEND_HOST_URL}`, {
+  extraHeaders: {
+    "Content-type": "application/json"
+  },
+  withCredentials: true, // Include cookies or other credentials
+});
+
 export default function Home() {
   return (
     <SessionProvider>
