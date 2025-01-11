@@ -1,3 +1,4 @@
+import IBoardData from "@/Interfaces/IBoardData";
 import IBoardDataList from "@/Interfaces/IBoardDataList";
 import { createSlice } from "@reduxjs/toolkit";
 
@@ -31,44 +32,62 @@ export const boardSlice = createSlice({
         (boardData) => boardData._id !== action.payload.BoardId
       );
     },
-    updateBoardDataById: (state, action) => {
-      state.BoardDataList = state?.BoardDataList?.filter(
-        (boardData) => boardData._id !== action.payload.BoardId
+    updateBoardDataById: (state, { payload }) => {
+      //this function only updates board info not comments\
+
+      //finding board index
+      const index = state?.BoardDataList?.findIndex(
+        (boardData) => boardData._id === payload.BoardId
       );
 
-      state.BoardDataList = [...state.BoardDataList, action.payload?.BoardData];
+      //updating data
+      if (index > -1) {
+        const allCommentsData = state.BoardDataList[index]?.commentDataList;
+        const updatedBoardObj: IBoardData = {
+          ...payload?.BoardData,
+          commentDataList: allCommentsData,
+        };
+
+        //removing old board
+        state.BoardDataList.splice(index, 1);
+        state.BoardDataList = [...state.BoardDataList, updatedBoardObj];
+      }
     },
     clearBoardData: (state) => {
       state.BoardDataList.length = 0;
     },
-    addBoardDataCommentById: (state, action) => {
+    addBoardDataCommentById: (state, { payload }) => {
       state.BoardDataList?.forEach((board) => {
-        if (board?._id === action.payload.BoardId) {
-          board.commentDataList.push(action.payload.NewComment);
+        if (board?._id === payload.BoardId) {
+          const commentExists = board.commentDataList?.findIndex(
+            (c) => c?._id === payload.NewComment?._id
+          );
+          if (commentExists === -1)
+            board.commentDataList.push(payload.NewComment);
           return;
         }
       });
     },
     updateBoardDataCommentById: (state, { payload }) => {
-      state.BoardDataList?.forEach((data) => {
-        if (data._id === payload.BoardId) {
-          data.commentDataList = data?.commentDataList?.filter(
-            (comments) => comments._id !== payload?.UpdatedComment?._id
+      state.BoardDataList?.forEach((board) => {
+        if (board._id === payload.BoardId) {
+          board.commentDataList = board?.commentDataList?.filter(
+            (comments) => comments?._id !== payload?.UpdatedComment?._id
           );
 
-          data.commentDataList = [
-            ...data.commentDataList,
+          board.commentDataList = [
+            ...board.commentDataList,
             payload?.UpdatedComment,
           ];
           return;
         }
       });
     },
-    deleteBoardDataCommentById: (state, action) => {
+    deleteBoardDataCommentById: (state, { payload }) => {
       state.BoardDataList?.forEach((board) => {
-        if (board?._id === action.payload.BoardId) {
+        if (board?._id === payload.BoardId) {
           board.commentDataList = board?.commentDataList?.filter(
-            (comments) => comments._id != action.payload?.CommentId
+            (c) => c?._id !== payload?.CommentId
           );
           return;
         }
