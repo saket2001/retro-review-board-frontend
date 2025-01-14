@@ -1,6 +1,7 @@
 import {
   Card,
   CardContent,
+  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -107,7 +108,10 @@ export default function LoginForm() {
       {IsLoading && <Loader />}
       <Card className="bg-gray-100">
         <CardHeader>
-          <CardTitle>Welcome Back, User!</CardTitle>
+          <CardTitle>Welcome Back, User</CardTitle>
+          <CardDescription>
+            Its good to see you back
+          </CardDescription>
         </CardHeader>
         <CardContent className="space-y-2">
           <div className="space-y-1">

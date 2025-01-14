@@ -21,13 +21,10 @@ export default function BoardDetails({
     params: { boardId: string };
 }) {
     const dispatch = useAppDispatch();
-    const [loading, setLoading] = useState(true)
     const boardDataList: IBoardDataList = useAppSelector((state) => state.boardState);
     const boardData: IBoardData | undefined = useMemo(
         () => {
-            setLoading(true);
             return boardDataList?.BoardDataList?.find(board => board?.boardCode === params?.boardId) ?? undefined
-            setLoading(false);
         },
         [boardDataList, params.boardId]
     );
@@ -37,10 +34,9 @@ export default function BoardDetails({
     const loginData: ILoginState = useAppSelector((state) => state.loginState);
     const canUpdateBoardSetting: boolean = loginData?.loggedInUserId === boardData?.ownerUserId;
 
-    const { error } = useQuery({
+    const { error, isLoading } = useQuery({
         queryKey: ["board-by-id"],
         queryFn: async () => {
-            setLoading(true);
             const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/board/get-board-by-id?boardId=${params?.boardId}`);
             if (!res.ok) throw new Error('Network response was not ok');
             const data = await res.json();
@@ -78,7 +74,6 @@ export default function BoardDetails({
     });
 
     useEffect(() => {
-        setLoading(true);
         //creating a state object of comments as per category
         if (boardData && boardData?.boardCategories && boardData?.boardCategories?.length > 0) {
             const commentsByBoardTitleObj: ICommentsByBoardTitle = {};
@@ -92,7 +87,6 @@ export default function BoardDetails({
             setRetroBoardTitles(boardTitles);
             setCommentsByBoardTitle(commentsByBoardTitleObj);
         }
-        setLoading(false);
 
     }, [boardData, params.boardId])
 
@@ -100,18 +94,16 @@ export default function BoardDetails({
         setShowBoardLockAlert(prev => !prev)
     }, [])
 
-    if (loading)
-        return <Loader text="Loading Your Board Data, Hold On..." />
-
     if (error) {
-        setLoading(false);
         console.log(error);
     };
 
     return (
         <SessionProvider>
             <>
-                {boardData?.isBoardLocked && showBoardLockAlert && <BoardLockedSection clickHandler={boardLockClickHandler} />}
+                {isLoading && <Loader text="Loading Your Board Data, Hold On..." />}
+                {boardData?.isBoardLocked && showBoardLockAlert &&
+                    <BoardLockedSection clickHandler={boardLockClickHandler} />}
                 <section className="flex flex-col px-3 py-2 h-full w-full">
                     <BoardCommentHeader boardData={boardData} canUpdateBoardSetting={canUpdateBoardSetting} />
                     {retroBoardTitles?.length > 0 && commentsByBoardTitle &&
@@ -132,7 +124,7 @@ export default function BoardDetails({
                     }
                 </section>
                 {/* Wrong Board Section */}
-                {!boardData && <NotFoundBoardSection />}
+                {!boardData && !isLoading && <NotFoundBoardSection />}
             </>
         </SessionProvider>
     );
