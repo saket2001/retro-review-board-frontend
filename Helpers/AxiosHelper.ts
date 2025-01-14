@@ -29,16 +29,25 @@ class AxiosHelper {
   };
 
   PostReq = async (apiEndpoint: string, data: unknown) => {
-    const res = await axios.post(
-      this._baseUrl + apiEndpoint,
-      JSON.stringify(data),
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    return this.HandleApiCallsResponse(res);
+    try {
+      const res = await axios.post(
+        this._baseUrl + apiEndpoint,
+        JSON.stringify(data),
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      return this.HandleApiCallsResponse(res);
+    } catch (error: unknown) {
+      console.log(error);
+      return {
+        IsError: true,
+        Message: error ?? "Something went wrong",
+        data: null,
+      };
+    }
   };
 
   DeleteReq = async (apiEndpoint: string, data?: unknown) => {

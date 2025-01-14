@@ -37,8 +37,8 @@ const BoardCommentHeader = (props: IProps) => {
                         <div className="flex items-center gap-x-2">
                             <BackButton />
                             <ShareButton boardId={props.boardData?.boardCode} />
-                            {props.canUpdateBoardSetting && <BoardSettingButton boardCode={props?.boardData.boardCode} />}
-                            {!props?.boardData.isBoardLocked && <BoardDownloadIcon boardData={props.boardData} excelFileName={`${props.boardData?.boardName}_export_${new Date().toISOString()}_.xlsx`} />}
+                            {props.canUpdateBoardSetting && <BoardSettingButton boardCode={props?.boardData?.boardCode} />}
+                            {!props?.boardData?.isBoardLocked && <BoardDownloadIcon boardData={props.boardData} excelFileName={`${props.boardData?.boardName}_export_${new Date().toISOString()}_.xlsx`} />}
                         </div>
                     </div>
                 </section>

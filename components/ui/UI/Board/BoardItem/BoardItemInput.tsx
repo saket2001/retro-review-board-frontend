@@ -10,6 +10,7 @@ import TurndownService from 'turndown';
 import { Button } from "@/components/ui/MyButton";
 import { useAppDispatch, useAppSelector } from "@/State/stateExports";
 import AxiosHelper from "@/Helpers/AxiosHelper";
+import { Loader } from "../../Loader/Loader";
 
 
 interface BoardItemInputProps {
@@ -33,6 +34,7 @@ const modules = {
 const BoardItemInput: FunctionComponent<BoardItemInputProps> = (props) => {
     const dispatch = useAppDispatch();
     const turndownService = new TurndownService();
+    const [isLoading, setIsLoading] = useState(false);
     const [userComment, setUserComment] = useState(props?.boardItemData?.comment ?? "");
     const loginData: ILoginState = useAppSelector((state) => state.loginState);
     const helper = new AxiosHelper();
@@ -64,11 +66,10 @@ const BoardItemInput: FunctionComponent<BoardItemInputProps> = (props) => {
                 category: props.boardItemCategory,
                 likes: props.boardItemData?.likes ?? "0",
             }
-
+            setIsLoading(true)
             const res = await helper.PostReq("/board/save-comment", {
                 commentData: comment,
             });
-
 
             if (!res?.IsError) {
                 //adding to store
@@ -86,15 +87,20 @@ const BoardItemInput: FunctionComponent<BoardItemInputProps> = (props) => {
 
                 //resetting ui input
                 setUserComment("");
+                setIsLoading(false)
                 toast.success(res?.Message)
             }
-            else
+            else {
+                setIsLoading(false)
                 toast.error(res?.Message)
+            }
 
             if (!props?.IsItemNew) props?.handleEditCommentFn(false);
         }
         catch (error: unknown) {
-            toast.error(error?.message, { autoClose: 1500 });
+            setIsLoading(false)
+            console.log(error);
+            toast.error("Something went wrong");
         }
     }
 
@@ -107,25 +113,28 @@ const BoardItemInput: FunctionComponent<BoardItemInputProps> = (props) => {
     }
 
     return (
-        <Card className="rounded-md">
-            <CardHeader className="w-100 px-4">
-                <form className="flex flex-col gap-x-3">
-                    <ReactQuill
-                        value={userComment}
-                        className="my-2"
-                        theme="snow"
-                        onChange={setUserComment}
-                        modules={modules}
-                        placeholder="Write your comment here..."
-                    />
+        <>
+            {isLoading && <Loader text="Saving your comment..." />}
+            <Card className="rounded-md">
+                <CardHeader className="w-100 px-4">
+                    <form className="flex flex-col gap-x-3">
+                        <ReactQuill
+                            value={userComment}
+                            className="my-2"
+                            theme="snow"
+                            onChange={setUserComment}
+                            modules={modules}
+                            placeholder="Write your comment here..."
+                        />
 
-                    <div className="flex gap-x-4 py-1">
-                        <Button onClick={(e) => handleSave(e)} className="w-fit" size={"sm"}>Save</Button>
-                        {!props.IsItemNew && <Button variant={"secondary"} onClick={handleCancel} className="w-fit" size={"sm"}>Cancel</Button>}
-                    </div>
-                </form>
-            </CardHeader>
-        </Card>
+                        <div className="flex gap-x-4 py-1">
+                            <Button disabled={isLoading} onClick={(e) => handleSave(e)} className="w-fit" size={"sm"}>Save</Button>
+                            {!props.IsItemNew && <Button variant={"secondary"} onClick={handleCancel} className="w-fit" size={"sm"}>Cancel</Button>}
+                        </div>
+                    </form>
+                </CardHeader>
+            </Card>
+        </>
     );
 };
 

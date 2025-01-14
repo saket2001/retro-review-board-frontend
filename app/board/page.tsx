@@ -32,9 +32,6 @@ export default function BoardHome() {
         queryFn: async () => {
             if (loginData.loggedInUserId?.length > 0) {
                 const data = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/board/get-all-boards?userId=${loginData.loggedInUserId}`);
-                // if (data?.data?.IsError) {
-                //     toast.error(data?.data?.Message)
-                // }
                 return data?.data;
             }
         }
