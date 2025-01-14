@@ -4,27 +4,18 @@ import BoardSettings from "../../../../components/ui/UI/Board/BoardSetting/Board
 import { Card, CardHeader, CardDescription, CardContent } from "@/components/ui/card";
 import { BackButton } from "@/components/ui/UI/BackButton";
 import SessionProvider from "@/app/SessionProvider";
-import { useQueryClient } from "@tanstack/react-query";
 import IBoardData from "@/Interfaces/IBoardData";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Loader } from "@/components/ui/UI/Loader/Loader";
 import IBoardDataList from "@/Interfaces/IBoardDataList";
 import { useAppSelector } from "@/State/stateExports";
 import { NotFoundBoardSection } from "@/components/ui/UI/Board/NotFoundBoardSection";
-
-interface ICachedData {
-    IsError: boolean,
-    Message: string,
-    Result: IBoardData[]
-}
 
 export default function BoardSettingPage({
     params,
 }: {
     params: { boardId: string };
 }) {
-    // const queryClient = useQueryClient();
-    // const [boardData, setBoardData] = useState<IBoardData>();
     const [isLoading] = useState<boolean>(false);
     const boardDataList: IBoardDataList = useAppSelector((state) => state.boardState);
     const boardData: IBoardData | undefined = useMemo(
@@ -33,16 +24,6 @@ export default function BoardSettingPage({
         },
         [boardDataList, params.boardId]
     );
-    // const cachedBoardsData: ICachedData | undefined = queryClient.getQueryData(["user-boards"]);
-
-    // useEffect(() => {
-    //     if (cachedBoardsData !== undefined) {
-    //         setIsLoading(true)
-    //         const arr = cachedBoardsData?.Result;
-    //         setBoardData(arr?.find(board => board.boardCode === params?.boardId))
-    //     }
-    //     setIsLoading(false)
-    // }, [params.boardId])
 
     return (
         <SessionProvider>
