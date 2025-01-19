@@ -50,7 +50,7 @@ class AxiosHelper {
     }
   };
 
-  DeleteReq = async (apiEndpoint: string, data?: unknown) => {
+  DeleteReq = async (apiEndpoint: string) => {
     const res = await axios.delete(this._baseUrl + apiEndpoint);
     return this.HandleApiCallsResponse(res);
   };
