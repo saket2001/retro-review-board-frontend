@@ -8,8 +8,8 @@ import {
     CollapsibleTrigger,
 } from "@/components/ui/collapsible"
 import Heading from '@/components/ui/UI/HeadingComponent/Heading';
-import ToggleUp from '@/components/ui/Icons/toggleUp';
-import ToggleDown from '@/components/ui/Icons/toggleDown';
+import ToggleUp from '@/components/ui/Icons/ToggleUp';
+import ToggleDown from '@/components/ui/Icons/ToggleDown';
 import AllUsersBoardTableView from '@/components/ui/UI/Manage/AllUsersBoardTableView';
 
 const ManagePage = () => {
