@@ -12,7 +12,8 @@ Hi Everyone,
 Join our board and be part of the action! Use the unique code below to access the board and collaborate with the team.
 Your Joining Code: ${props.boardId}
 Simply enter this code in the My Boards page after completing loggin.
-Head to this site and login using guest mode or user. ${process.env.NEXT_PUBLIC_FRONTEND_URL}
+Head to this site and login using guest mode or user. 
+${process.env.NEXT_PUBLIC_FRONTEND_URL}/board/${props.boardId}
 Share your valueable insights of the sprint 🚀
 `)
                 toast.success("Code copied to your clipboard")

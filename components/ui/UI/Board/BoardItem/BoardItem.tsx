@@ -45,7 +45,7 @@ const BoardItem = (props: BoardItem) => {
                     <div className="flex items-center gap-x-3">
                         <div className="flex items-center gap-x-2 text-base py-1 capitalize font-500 text-gray-700">
                             <UserLogo />
-                            {props?.maskUserComments ? 'Guest' : `${props.data?.commenterName}`}
+                            ${props.data?.commenterName}
                         </div>
                     </div>
 
