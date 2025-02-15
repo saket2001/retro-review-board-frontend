@@ -1,17 +1,27 @@
 import Cookies from "js-cookie";
 
 class CommonHelper {
-  GetPreviousVisitedUrl = (): string => {
-    let url = "";
-    if (document) url = document?.referrer;
+  SetCookie = (key: string, value: string) => {
+    Cookies.remove(key);
+    Cookies.set(key, value, {
+      secure: true,
+      expires: 1,
+      path: "/",
+    });
+  };
 
-    return url;
+  GetCookie = (key: string) => {
+    return Cookies.get(key);
   };
 
   SetAuthUserCookies = (result: {
     refreshToken: string;
     accessToken: string;
-    user: { loggedInUserId: string; loggedInUserName: string };
+    user: {
+      loggedInUserId: string;
+      loggedInUserName: string;
+      isGuestUser: boolean;
+    };
   }) => {
     Cookies.set("refresh-token", result?.refreshToken, {
       secure: true,
@@ -27,6 +37,15 @@ class CommonHelper {
     //storing other details too
     Cookies.set("loggedInUserId", result?.user?.loggedInUserId);
     Cookies.set("loggedInUserName", result?.user?.loggedInUserName);
+    Cookies.set("isGuestUser", result?.user?.isGuestUser + "");
+  };
+
+  GetCurrentUrl = (): string => {
+    return window !== undefined ? window.location.href : "";
+  };
+
+  GetPreviousVisitedUrl = (fallbackRoute: string): string => {
+    return window !== undefined ? window.location.href : fallbackRoute;
   };
 }
 

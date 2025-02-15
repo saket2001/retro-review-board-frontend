@@ -17,6 +17,8 @@ export default function CreateBoardPage() {
                         <CardDescription>
                             Here you can configure your retro board for its behavior and looks. You will be the owner of the board and can change the setting anytime.
                             Once done click on save so you will be logged in.
+                            <br />
+                            <b>Note: Create boards only logged in as a user and not as a guest to avoid board deletion after logout</b>
                         </CardDescription>
                     </CardHeader>
                     <CardContent>

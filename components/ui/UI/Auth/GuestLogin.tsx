@@ -40,7 +40,6 @@ export default function GuestLogin() {
                 return;
             } else {
                 const result = res?.data?.Result;
-                toast.success(res?.data?.Message);
 
                 //handle state management
                 dispatch(updateLoginStateData({
@@ -52,10 +51,13 @@ export default function GuestLogin() {
                     isGuestUser: true,
                 }))
 
+                toast.success(res?.data?.Message);
+
+                result["user"]["isGuestUser"] = true;
                 const helper = new CommonHelper();
                 helper.SetAuthUserCookies(result);
 
-                router.push("/board")
+                router.push(helper.GetCookie("previous_url_visted") ?? "/board");
             }
         } catch {
             setIsLoading(false)

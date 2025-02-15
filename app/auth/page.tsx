@@ -4,17 +4,9 @@ import Heading from "../../components/ui/UI/HeadingComponent/Heading";
 import LoginForm from "../../components/ui/UI/Auth/Login";
 import SignUpForm from "../../components/ui/UI/Auth/SignUp";
 import GuestLogin from "../../components/ui/UI/Auth/GuestLogin";
-import { useAppSelector } from "@/State/stateExports";
-import { useRouter } from "next/navigation";
 import SessionProvider from "../SessionProvider";
 
 const WelcomeAuth = () => {
-  const router = useRouter();
-  const userLoginState = useAppSelector(state => state.loginState);
-
-  if (userLoginState?.isLoggedIn) {
-    router.replace("/")
-  }
 
   return (
     <SessionProvider>
