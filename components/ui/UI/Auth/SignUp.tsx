@@ -74,6 +74,7 @@ export default function SignUpForm() {
           isGuestUser: false,
         }))
 
+        result["user"]["isGuestUser"] = false
         const helper = new CommonHelper();
         helper.SetAuthUserCookies(result);
 

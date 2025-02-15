@@ -53,6 +53,7 @@ export default function GuestLogin() {
 
                 toast.success(res?.data?.Message);
 
+                result["user"]["isGuestUser"] = true;
                 const helper = new CommonHelper();
                 helper.SetAuthUserCookies(result);
 

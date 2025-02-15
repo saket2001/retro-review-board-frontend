@@ -14,6 +14,7 @@ export const useSession = () => {
   const refreshToken = Cookies.get("refresh-token");
   const userId = Cookies.get("loggedInUserId");
   const userName = Cookies.get("loggedInUserName");
+  const isGuestUser = Cookies.get("isGuestUser") === "true" ? true : false;
 
   useEffect(() => {
     if (
@@ -28,6 +29,7 @@ export const useSession = () => {
           loginToken: accessToken,
           loggedInUserId: userId,
           loggedInUserName: userName,
+          isGuestUser,
         })
       );
       setIsLoggedIn(true);
@@ -43,7 +45,15 @@ export const useSession = () => {
       router.replace("/auth");
       return setIsLoggedIn(false);
     }
-  }, [accessToken, refreshToken, userId, userName, dispatch, router]);
+  }, [
+    accessToken,
+    refreshToken,
+    userId,
+    userName,
+    isGuestUser,
+    dispatch,
+    router,
+  ]);
 
   return { isLoggedIn };
 };

@@ -34,6 +34,7 @@ export const loginSlice = createSlice({
       Cookies.remove("refresh-token");
       Cookies.remove("loggedInUserId");
       Cookies.remove("loggedInUserName");
+      Cookies.remove("isGuestUser");
       state.isLoggedIn = false;
       state.loginToken = "";
       state.loggedInUserId = "";

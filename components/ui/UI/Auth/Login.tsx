@@ -85,6 +85,8 @@ export default function LoginForm() {
           isGuestUser: false,
         }))
 
+        result["user"]["isGuestUser"] = false
+
         //storing refresh token
         const helper = new CommonHelper();
         helper.SetAuthUserCookies(result);

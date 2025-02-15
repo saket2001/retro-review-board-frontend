@@ -17,7 +17,11 @@ class CommonHelper {
   SetAuthUserCookies = (result: {
     refreshToken: string;
     accessToken: string;
-    user: { loggedInUserId: string; loggedInUserName: string };
+    user: {
+      loggedInUserId: string;
+      loggedInUserName: string;
+      isGuestUser: boolean;
+    };
   }) => {
     Cookies.set("refresh-token", result?.refreshToken, {
       secure: true,
@@ -33,6 +37,7 @@ class CommonHelper {
     //storing other details too
     Cookies.set("loggedInUserId", result?.user?.loggedInUserId);
     Cookies.set("loggedInUserName", result?.user?.loggedInUserName);
+    Cookies.set("isGuestUser", result?.user?.isGuestUser + "");
   };
 
   GetCurrentUrl = (): string => {
