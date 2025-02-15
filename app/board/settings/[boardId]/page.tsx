@@ -39,6 +39,8 @@ export default function BoardSettingPage({
                             <Heading title="Edit Retro Board" variant="h1" />
                             <CardDescription>
                                 Here you can configure your retro board for its behavior and looks.Once done click on save
+                                <br />
+                                <b>Note: Create boards only logged in as a user and not as a guest to avoid board deletion after logout</b>
                             </CardDescription>
                         </CardHeader>
                         <CardContent>

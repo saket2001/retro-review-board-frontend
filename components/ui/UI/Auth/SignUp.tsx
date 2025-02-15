@@ -77,7 +77,7 @@ export default function SignUpForm() {
         const helper = new CommonHelper();
         helper.SetAuthUserCookies(result);
 
-        router.push("/board")
+        router.push(helper.GetCookie("previous_url_visted") ?? "/board");
       }
 
     } catch (err: unknown) {

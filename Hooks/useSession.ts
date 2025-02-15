@@ -4,6 +4,7 @@ import Cookies from "js-cookie";
 import { useAppDispatch } from "@/State/stateExports";
 import { logoutUser, updateLoginStateData } from "@/State/Slices/LoginSlice";
 import { useRouter } from "next/navigation";
+import CommonHelper from "@/Helpers/CommonHelper";
 
 export const useSession = () => {
   const dispatch = useAppDispatch();
@@ -31,6 +32,13 @@ export const useSession = () => {
       );
       setIsLoggedIn(true);
     } else {
+      //saving url in session only for board routes
+      const helper = new CommonHelper();
+      const currUrl = helper.GetCurrentUrl();
+
+      if (!currUrl.includes("auth"))
+        helper.SetCookie("previous_url_visted", currUrl);
+
       dispatch(logoutUser());
       router.replace("/auth");
       return setIsLoggedIn(false);
