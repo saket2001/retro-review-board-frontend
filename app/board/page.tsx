@@ -67,7 +67,7 @@ export default function BoardHome() {
         <SessionProvider>
             <>
                 {isLoading && <Loader />}
-                <section className="flex flex-col px-3 py-2 h-full w-full">
+                <section className="flex flex-col px-3 py-2 h-full w-full gap-y-2">
                     {/* header */}
                     <section className="flex flex-col gap-3 px-2">
                         <div className="flex justify-between px-1">
@@ -124,17 +124,20 @@ export default function BoardHome() {
                     </section>
 
                     {/* board views */}
-                    {boardDataListState?.length > 0 && (
-                        currentView === "grid" ?
-                            <section className="grid lg:grid-cols-2 gap-3 lg:gap-x-8 py-4 px-1">
-                                {boardDataListState?.map((data) => (
-                                    <BoardCard key={data?._id} boardData={data} userData={loginData} handlePostDeleteAction={handlePostDeleteAction} />
-                                ))}
-                            </section> :
-                            <section className="py-4 px-1">
-                                <BoardTableView listOfBoards={boardDataListState} />
-                            </section>)
-                    }
+                    <section className="flex flex-col gap-y-1 p-2 my-1 bg-gray-100 rounded">
+                        <Heading title="Your Boards" variant="h2" extraStyles="py-0.5 mx-2" />
+                        {boardDataListState?.length > 0 && (
+                            currentView === "grid" ?
+                                <section className="grid lg:grid-cols-2 gap-3 lg:gap-x-8 py-4 px-1">
+                                    {boardDataListState?.map((data) => (
+                                        <BoardCard key={data?._id} boardData={data} userData={loginData} handlePostDeleteAction={handlePostDeleteAction} />
+                                    ))}
+                                </section> :
+                                <section className="py-4 px-1">
+                                    <BoardTableView listOfBoards={boardDataListState} />
+                                </section>)
+                        }
+                    </section>
 
                     {/* board share input */}
                     <div className="fixed z-30 bottom-10 right-16 mr-2">
