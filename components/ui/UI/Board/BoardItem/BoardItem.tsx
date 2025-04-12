@@ -32,7 +32,7 @@ const BoardItem = (props: BoardItem) => {
     }
 
     return (
-        <Card className="border-l-4 border-l-gray-400 rounded shadow-sm" data-id={props.data?._id}>
+        <Card className="border-l-4 border-l-gray-500 rounded shadow-sm hover:border-l-gray-900 transition-all ease-linear" data-id={props.data?._id}>
             <CardHeader>
                 <CardDescription>
                     {props?.maskUserComments ? <MaskedCommentIcon /> : <ReactMarkdown>

@@ -18,6 +18,8 @@ import BoardTableView from "@/components/ui/UI/Board/BoardTableView/BoardTableVi
 import RefreshIcon from "@/components/ui/Icons/RefreshIcon";
 import useSessionStorageState from 'use-session-storage-state'
 import BoardShareInput from "@/components/ui/UI/Board/BoardShareInput/BoardShareInput";
+import Link from "next/link";
+import { SearchIcon } from "@/components/ui/Icons/SearchIcon";
 
 export default function BoardHome() {
     const dispatch = useAppDispatch();
@@ -73,11 +75,29 @@ export default function BoardHome() {
                         <div className="flex justify-between px-1">
                             <Heading title={`Welcome ${loginData.loggedInUserName ?? "User"}`} variant="h1" extraStyles="lg:text-2xl" />
                             <div className="flex flex-col gap-3">
-                                <section className="flex gap-x-3">
+                                <section className="flex items-center gap-x-3">
+                                    {/* search icon */}
+                                    <TooltipProvider>
+                                        <Tooltip>
+                                            <TooltipTrigger>
+                                                <Link className="ease-in-out transition-transform hover:scale-105" href={"/board/search-board?reset=true"}>
+                                                    <SearchIcon />
+                                                </Link>
+                                            </TooltipTrigger>
+                                            <TooltipContent>Search Any Board</TooltipContent>
+                                        </Tooltip>
+                                    </TooltipProvider>
                                     {/* refresh icon */}
-                                    <Button variant={"ghost"} onClick={handleBoardRefresh}>
-                                        <RefreshIcon />
-                                    </Button>
+                                    <TooltipProvider>
+                                        <Tooltip>
+                                            <TooltipTrigger>
+                                                <Button variant={"ghost"}>
+                                                    <RefreshIcon onClickHandler={handleBoardRefresh} />
+                                                </Button>
+                                            </TooltipTrigger>
+                                            <TooltipContent>Refresh Page</TooltipContent>
+                                        </Tooltip>
+                                    </TooltipProvider>
                                     <div className="flex flex-col">
                                         {/* view options */}
                                         {boardDataListState?.length > 0 && <TooltipProvider>
@@ -91,7 +111,6 @@ export default function BoardHome() {
                                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-6">
                                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M3.375 19.5h17.25m-17.25 0a1.125 1.125 0 0 1-1.125-1.125M3.375 19.5h7.5c.621 0 1.125-.504 1.125-1.125m-9.75 0V5.625m0 12.75v-1.5c0-.621.504-1.125 1.125-1.125m18.375 2.625V5.625m0 12.75c0 .621-.504 1.125-1.125 1.125m1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125m0 3.75h-7.5A1.125 1.125 0 0 1 12 18.375m9.75-12.75c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125m19.5 0v1.5c0 .621-.504 1.125-1.125 1.125M2.25 5.625v1.5c0 .621.504 1.125 1.125 1.125m0 0h17.25m-17.25 0h7.5c.621 0 1.125.504 1.125 1.125M3.375 8.25c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125m17.25-3.75h-7.5c-.621 0-1.125.504-1.125 1.125m8.625-1.125c.621 0 1.125.504 1.125 1.125v1.5c0 .621-.504 1.125-1.125 1.125m-17.25 0h7.5m-7.5 0c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125M12 10.875v-1.5m0 1.5c0 .621-.504 1.125-1.125 1.125M12 10.875c0 .621.504 1.125 1.125 1.125m-2.25 0c.621 0 1.125.504 1.125 1.125M13.125 12h7.5m-7.5 0c-.621 0-1.125.504-1.125 1.125M20.625 12c.621 0 1.125.504 1.125 1.125v1.5c0 .621-.504 1.125-1.125 1.125m-17.25 0h7.5M12 14.625v-1.5m0 1.5c0 .621-.504 1.125-1.125 1.125M12 14.625c0 .621.504 1.125 1.125 1.125m-2.25 0c.621 0 1.125.504 1.125 1.125m0 1.5v-1.5m0 0c0-.621.504-1.125 1.125-1.125m0 0h7.5" />
                                                             </svg>
-
                                                         }
                                                     </Button>
                                                 </TooltipTrigger>
@@ -104,11 +123,6 @@ export default function BoardHome() {
                                         </TooltipProvider>}
                                     </div>
                                 </section>
-                                {/* {boardDataListState?.length > 0 &&
-                                    <section>
-                                        <Button variant={"ghost"}>Owned By You</Button>
-                                    </section>
-                                } */}
                             </div>
                         </div>
                         {(boardDataListState == undefined || boardDataListState?.length === 0) && (
@@ -124,20 +138,25 @@ export default function BoardHome() {
                     </section>
 
                     {/* board views */}
-                    <section className="flex flex-col gap-y-1 p-2 my-1 bg-gray-100 rounded">
-                        <Heading title="Your Boards" variant="h2" extraStyles="py-0.5 mx-2" />
-                        {boardDataListState?.length > 0 && (
-                            currentView === "grid" ?
-                                <section className="grid lg:grid-cols-2 gap-3 lg:gap-x-8 py-4 px-1">
-                                    {boardDataListState?.map((data) => (
-                                        <BoardCard key={data?._id} boardData={data} userData={loginData} handlePostDeleteAction={handlePostDeleteAction} />
-                                    ))}
-                                </section> :
-                                <section className="py-4 px-1">
-                                    <BoardTableView listOfBoards={boardDataListState} />
-                                </section>)
-                        }
-                    </section>
+                    {(boardDataListState !== undefined && boardDataListState?.length !== 0) && (
+                        <section className="flex flex-col gap-y-1 p-2 my-1 bg-white rounded-lg shadow">
+                            <span className="flex items-center gap-1">
+                                <Heading title="My Boards" variant="h2" extraStyles="py-0.5 mx-2 text-gray-800" />
+                                <p className="text-sm text-gray-600">( Total {boardDataListState.length} )</p>
+                            </span>
+                            {boardDataListState.length > 0 && (
+                                currentView === "grid" ?
+                                    <section className="grid lg:grid-cols-2 gap-3 lg:gap-x-8 py-4 px-1">
+                                        {boardDataListState?.map((data) => (
+                                            <BoardCard key={data?._id} boardData={data} userData={loginData} handlePostDeleteAction={handlePostDeleteAction} />
+                                        ))}
+                                    </section> :
+                                    <section className="py-4 px-1">
+                                        <BoardTableView listOfBoards={boardDataListState} />
+                                    </section>)
+                            }
+                        </section>
+                    )}
 
                     {/* board share input */}
                     <div className="fixed z-30 bottom-10 right-16 mr-2">
