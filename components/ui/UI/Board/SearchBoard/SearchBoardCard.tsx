@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/MyButton";
+import { DateFormatOptions } from "@/Constants/DateFormatOptions";
 import IBoardData from "@/Interfaces/IBoardData";
 import Link from "next/link";
 import React from "react";
@@ -19,7 +20,7 @@ const SearchBoardCard = (props: IPropsType) => {
                     Code : {props?.BoardData?.boardCode}
                 </p>
                 <p className="text-sm flex items-center">
-                    Created On : {new Date(props?.BoardData?.createdAt)?.toLocaleString("en-US", { timeZone: "UTC" })}
+                    Created On : {new Intl.DateTimeFormat("en-IN", DateFormatOptions).format(new Date(props?.BoardData?.createdAt))}
                 </p>
                 {/* view button */}
                 <Button className="w-fit mt-1">

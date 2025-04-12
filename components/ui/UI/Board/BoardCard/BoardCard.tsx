@@ -12,6 +12,7 @@ import Heading from "../../HeadingComponent/Heading";
 import { Button } from "@/components/ui/MyButton";
 import { useAppDispatch } from "@/State/stateExports";
 import BoardSettingButton from "../../BoardSettingButton";
+import { DateFormatOptions } from "@/Constants/DateFormatOptions";
 
 interface BoardCardProps {
     boardData: IBoardData,
@@ -19,16 +20,6 @@ interface BoardCardProps {
     handlePostDeleteAction: () => void;
 }
 
-const DateFormatOptions = {
-    timeZone: 'Asia/Kolkata',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    hour: 'numeric',
-    minute: '2-digit',
-    second: '2-digit',
-    hour12: true,
-}
 
 const BoardCard: FunctionComponent<BoardCardProps> = (props) => {
     const dispatch = useAppDispatch();
