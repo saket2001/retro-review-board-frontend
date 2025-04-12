@@ -5,12 +5,6 @@ import { toast } from "react-toastify";
 import AxiosHelper from "@/Helpers/AxiosHelper";
 import { Loader } from "../../Loader/Loader";
 import { Checkbox } from "@/components/ui/checkbox";
-import { TooltipProvider } from "@radix-ui/react-tooltip";
-import {
-    Tooltip,
-    TooltipContent,
-    TooltipTrigger,
-} from "@/components/ui/tooltip";
 import IBoardData from "@/Interfaces/IBoardData";
 import { InfoButton } from "../../InfoButton";
 

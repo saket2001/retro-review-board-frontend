@@ -6,7 +6,7 @@ import SearchBoardInput from '@/components/ui/UI/Board/SearchBoard/SearchBoardIn
 import SearchBoardUI from '@/components/ui/UI/Board/SearchBoard/SearchBoardUI'
 import IBoardData from '@/Interfaces/IBoardData'
 import { useAppDispatch, useAppSelector } from '@/State/stateExports';
-import { resetSearchState, updateSearchQueryParameters, updateSearchResult } from '@/State/Slices/SearchBoardSlice';
+import { resetSearchState, updateSearchResult } from '@/State/Slices/SearchBoardSlice';
 import { useSearchParams, useRouter } from 'next/navigation';
 import SessionProvider from '@/app/SessionProvider';
 
