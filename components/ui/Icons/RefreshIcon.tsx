@@ -1,5 +1,5 @@
 interface IProps {
-    onClickHandler?: () => void;
+    onClickHandler: () => void;
 }
 
 const RefreshIcon = (props: IProps) => {

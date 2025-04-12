@@ -19,6 +19,17 @@ interface BoardCardProps {
     handlePostDeleteAction: () => void;
 }
 
+const DateFormatOptions = {
+    timeZone: 'Asia/Kolkata',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: true,
+}
+
 const BoardCard: FunctionComponent<BoardCardProps> = (props) => {
     const dispatch = useAppDispatch();
     const axiosHelper = new AxiosHelper();
@@ -61,10 +72,6 @@ const BoardCard: FunctionComponent<BoardCardProps> = (props) => {
                         Categories :
                         <span className="text-gray-600 font-normal capitalize"> {props?.boardData?.boardCategories}</span>
                     </p>
-                    {/* <p className="text-gray-800 font-semibold">
-                        Total Comments :
-                        <span className="text-gray-600 font-normal"> {props?.boardData?.commentDataList?.length ?? 0}</span>
-                    </p> */}
                     <p className="text-gray-800 font-semibold">
                         Comments Masked :
                         <span className="text-gray-600 font-normal"> {props?.boardData?.userCommentsMasked ? "Yes" : "No"}</span>
@@ -73,13 +80,13 @@ const BoardCard: FunctionComponent<BoardCardProps> = (props) => {
                         Is Locked :
                         <span className="text-gray-600 font-normal"> {props?.boardData?.isBoardLocked ? "Yes" : "No"}</span>
                     </p>
-                    <p className="text-gray-800 font-semibold">
+                    {/* <p className="text-gray-800 font-semibold">
                         Delete Board Data After :
                         <span className="text-gray-600 font-normal"> {props?.boardData?.deleteBoardDataAfterDays} {+props?.boardData?.deleteBoardDataAfterDays > 1 ? "Days" : " Day"}</span>
-                    </p>
+                    </p> */}
                     <p className="text-gray-800 font-semibold">
                         Created On:
-                        <span className="text-gray-600 font-normal"> {new Date(props?.boardData?.createdAt).toLocaleString()}</span>
+                        <span className="text-gray-600 font-normal"> {new Intl.DateTimeFormat("en-IN", DateFormatOptions).format(new Date(props?.boardData?.createdAt))}</span>
                     </p>
                     <div className="flex items-center gap-x-3 my-1">
                         <Button className="w-fit">

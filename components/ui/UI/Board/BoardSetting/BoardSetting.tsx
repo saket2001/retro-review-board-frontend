@@ -182,7 +182,7 @@ const BoardSettings: FunctionComponent<BoardSettingsProps> = (props) => {
                             </p>
                         )}
                     </div>
-                    <div className="flex flex-col w-50 gap-y-2">
+                    {/* <div className="flex flex-col w-50 gap-y-2">
                         <div className="">
                             <Label>Delete Board Data After (In Days)</Label>
                             <span className="text-gray-600 text-xs px-1 font-medium">
@@ -201,7 +201,7 @@ const BoardSettings: FunctionComponent<BoardSettingsProps> = (props) => {
                                 {boardErrors?.deleteBoardDataAfterDays}
                             </p>
                         )}
-                    </div>
+                    </div> */}
                     <div className="flex flex-col w-50 gap-y-2">
                         <Label>
                             Retro Board Categories
