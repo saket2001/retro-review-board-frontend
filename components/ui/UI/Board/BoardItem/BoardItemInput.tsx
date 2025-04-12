@@ -38,7 +38,6 @@ const BoardItemInput: FunctionComponent<BoardItemInputProps> = (props) => {
     const [userComment, setUserComment] = useState(props?.boardItemData?.comment ?? "");
     const loginData: ILoginState = useAppSelector((state) => state.loginState);
     const helper = new AxiosHelper();
-    // const boardData: IBoardData = useAppSelector((state) => state.boardState);
 
     const handleSave = async (e: MouseEvent<HTMLButtonElement, MouseEvent>) => {
         try {
@@ -50,10 +49,12 @@ const BoardItemInput: FunctionComponent<BoardItemInputProps> = (props) => {
 
             //checking if input is empty
             if (commentTrimmedLength === 0) {
-                throw new Error("Please enter a comment");
+                toast.error("Please enter a comment");
+                return;
             }
-            if (commentTrimmedLength > 500) {
-                throw new Error("Please enter a comment less than 500 characters long !");
+            if (commentTrimmedLength > 2000) {
+                toast.error("Please enter a comment less than 2000 characters long !");
+                return;
             }
 
             //create comment object
@@ -70,6 +71,8 @@ const BoardItemInput: FunctionComponent<BoardItemInputProps> = (props) => {
             const res = await helper.PostReq("/board/save-comment", {
                 commentData: comment,
             });
+
+            console.log(res);
 
             if (!res?.IsError) {
                 //adding to store

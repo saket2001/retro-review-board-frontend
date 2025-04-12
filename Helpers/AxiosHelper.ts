@@ -40,11 +40,12 @@ class AxiosHelper {
         }
       );
       return this.HandleApiCallsResponse(res);
-    } catch (error: unknown) {
-      console.log(error);
+    } catch (error) {
       return {
         IsError: true,
-        Message: error ?? "Something went wrong",
+        Message:
+          error?.response?.data?.Message ??
+          "Something went wrong, please check console",
         data: null,
       };
     }
