@@ -18,7 +18,7 @@ export const InfoButton = (props: { TooltipContent: ReactElement }) => {
                             viewBox="0 0 24 24"
                             strokeWidth={1.5}
                             stroke="currentColor"
-                            className="size-5"
+                            className="size-5 cursor-help"
                         >
                             <path
                                 strokeLinecap="round"

@@ -20,6 +20,8 @@ import useSessionStorageState from 'use-session-storage-state'
 import BoardShareInput from "@/components/ui/UI/Board/BoardShareInput/BoardShareInput";
 import Link from "next/link";
 import { SearchIcon } from "@/components/ui/Icons/SearchIcon";
+import { BackArrow } from "@/components/ui/Icons/BackArrow";
+import { ForwardArrow } from "@/components/ui/Icons/ForwardArrow";
 
 export default function BoardHome() {
     const dispatch = useAppDispatch();
@@ -28,21 +30,29 @@ export default function BoardHome() {
     const [boardDataListState, setBoardDataList] = useState<IBoardData[]>(boardDataList?.BoardDataList);
     const [defaultPageView, setDefaultView] = useSessionStorageState("current-view", { defaultValue: "grid" });
     const [currentView, setCurrentView] = useState(defaultPageView);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
 
     const { data, error, isLoading, refetch } = useQuery({
         queryKey: ["user-boards"],
         queryFn: async () => {
             if (loginData.loggedInUserId?.length > 0) {
-                const data = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/board/get-all-boards?userId=${loginData.loggedInUserId}`);
+                const data = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/board/get-all-boards?userId=${loginData.loggedInUserId}&page=${currentPage}&limit=10`);
                 return data?.data;
             }
         }
     });
 
     useEffect(() => {
-        dispatch(createNewBoardDataList(data?.Result ?? []))
-        setBoardDataList(data?.Result);
+        dispatch(createNewBoardDataList(data?.Result?.data ?? []))
+        setBoardDataList(data?.Result?.data);
+        setCurrentPage(data?.Result?.currentPage);
+        setTotalPages(data?.Result?.totalPages);
     }, [data, dispatch])
+
+    useEffect(() => {
+        refetch();
+    }, [currentPage, refetch])
 
     if (error) {
         // toast.error(error?.message)
@@ -140,10 +150,25 @@ export default function BoardHome() {
                     {/* board views */}
                     {(boardDataListState !== undefined && boardDataListState?.length !== 0) && (
                         <section className="flex flex-col gap-y-1 p-2 my-1 bg-white rounded-lg shadow">
-                            <span className="flex items-center gap-1">
-                                <Heading title="My Boards" variant="h2" extraStyles="py-0.5 mx-2 text-gray-800" />
-                                <p className="text-sm text-gray-600">( Total {boardDataListState.length} )</p>
-                            </span>
+                            <div className="flex justify-between gap-2 items-center px-2">
+                                <span className="flex flex-col lg:flex-row lg:items-center gap-1">
+                                    <Heading title="My Boards" variant="h2" extraStyles="py-0.5 mx-1 text-gray-800" />
+                                    <p className="text-sm text-gray-500 mx-1 lg:mx-0">( Total {boardDataListState.length} )</p>
+                                </span>
+                                {/* pagination buttons */}
+                                <div className="flex flex-col lg:flex-row lg:items-center gap-2">
+                                    <span className="text-sm text-gray-500 self-end lg:self-center pr-1 lg:pr-0">Page {currentPage} of {totalPages}</span>
+                                    <div className="flex items-center">
+                                        <Button variant={"outline"} onClick={() => setCurrentPage(p => Math.max(p - 1, 1))} disabled={currentPage === 1}>
+                                            <BackArrow />
+                                        </Button>
+                                        <Button variant={"outline"} onClick={() => setCurrentPage(p => Math.min(p + 1, totalPages))} disabled={currentPage === totalPages}>
+                                            <ForwardArrow />
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
+
                             {boardDataListState.length > 0 && (
                                 currentView === "grid" ?
                                     <section className="grid lg:grid-cols-2 gap-3 lg:gap-x-8 py-4 px-1">
